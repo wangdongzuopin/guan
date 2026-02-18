@@ -1,0 +1,44 @@
+{
+  "cli": {
+    "version": ">= 14.0.0"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
+      },
+      "ios": {
+        "simulator": false
+      }
+    },
+    "production-apk": {
+      "android": {
+        "buildType": "apk"
+      },
+      "env": {
+        "EXPO_PUBLIC_NEWS_API_BASE_URL": "https://gnews.io/api/v4/top-headlines"
+      }
+    },
+    "production-aab": {
+      "android": {
+        "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_NEWS_API_BASE_URL": "https://gnews.io/api/v4/top-headlines"
+      }
+    },
+    "production-ios": {
+      "ios": {
+        "simulator": false
+      },
+      "env": {
+        "EXPO_PUBLIC_NEWS_API_BASE_URL": "https://gnews.io/api/v4/top-headlines"
+      }
+    }
+  },
+  "submit": {
+    "production": {}
+  }
+}

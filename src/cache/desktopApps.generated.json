@@ -1,0 +1,1296 @@
+﻿[
+    {
+        "id":  "desktop-282578935",
+        "name":  "Administrative Tools",
+        "packageName":  "desktop:control",
+        "launchUri":  "file:///C:/Windows/system32/control.exe",
+        "executablePath":  "C:\\Windows\\system32\\control.exe"
+    },
+    {
+        "id":  "desktop-88103086",
+        "name":  "Apifox",
+        "packageName":  "desktop:apifox",
+        "launchUri":  "file:///D:/download/file/Apifox/Apifox.exe",
+        "executablePath":  "D:\\download\\file\\Apifox\\Apifox.exe"
+    },
+    {
+        "id":  "desktop-1588705513",
+        "name":  "Clash for Windows",
+        "packageName":  "desktop:clash for windows",
+        "launchUri":  "file:///D:/download/file/Clash.for.Windows-0.20.16.4-ikuuu/Clash.for.Windows-0.20.16-ikuuu/Clash%20for%20Windows.exe",
+        "executablePath":  "D:\\download\\file\\Clash.for.Windows-0.20.16.4-ikuuu\\Clash.for.Windows-0.20.16-ikuuu\\Clash for Windows.exe"
+    },
+    {
+        "id":  "desktop-1771825303",
+        "name":  "CMCC办公VPN",
+        "packageName":  "desktop:secui",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/V5VPN/SecUI.exe",
+        "executablePath":  "C:\\Program Files (x86)\\V5VPN\\SecUI.exe"
+    },
+    {
+        "id":  "desktop-1249919082",
+        "name":  "HBuilderX",
+        "packageName":  "desktop:hbuilderx",
+        "launchUri":  "file:///D:/download/file/HBuilderX.4.56.2025031210/HBuilderX/HBuilderX.exe",
+        "executablePath":  "D:\\download\\file\\HBuilderX.4.56.2025031210\\HBuilderX\\HBuilderX.exe"
+    },
+    {
+        "id":  "desktop-444890630",
+        "name":  "Obsidian",
+        "packageName":  "desktop:obsidian",
+        "launchUri":  "file:///D:/download/file/Obsidian/Obsidian.exe",
+        "executablePath":  "D:\\download\\file\\Obsidian\\Obsidian.exe"
+    },
+    {
+        "id":  "desktop-2089669114",
+        "name":  "OpenAkita Desktop",
+        "packageName":  "desktop:openakita-setup-center",
+        "launchUri":  "file:///D:/download/file/OpenAkita%20Desktop/openakita-setup-center.exe",
+        "executablePath":  "D:\\download\\file\\OpenAkita Desktop\\openakita-setup-center.exe"
+    },
+    {
+        "id":  "desktop-501187570",
+        "name":  "OpenCode",
+        "packageName":  "desktop:opencode",
+        "launchUri":  "file:///D:/download/file/OpenCode/OpenCode.exe",
+        "executablePath":  "D:\\download\\file\\OpenCode\\OpenCode.exe"
+    },
+    {
+        "id":  "desktop-766348067",
+        "name":  "WPS Office",
+        "packageName":  "desktop:ksolaunch",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/WPS%20Office/ksolaunch.exe",
+        "executablePath":  "C:\\Program Files (x86)\\WPS Office\\ksolaunch.exe"
+    },
+    {
+        "id":  "desktop-1760575731",
+        "name":  "Z Code",
+        "packageName":  "desktop:z-code",
+        "launchUri":  "file:///D:/download/file/Z%20Code/z-code.exe",
+        "executablePath":  "D:\\download\\file\\Z Code\\z-code.exe"
+    },
+    {
+        "id":  "desktop-83459330",
+        "name":  "爱奇艺",
+        "packageName":  "desktop:qyclient",
+        "launchUri":  "file:///D:/download/file/IQIYI%20Video/LStyle/QyClient.exe",
+        "executablePath":  "D:\\download\\file\\IQIYI Video\\LStyle\\QyClient.exe"
+    },
+    {
+        "id":  "desktop-128899168",
+        "name":  "豆包",
+        "packageName":  "desktop:doubao",
+        "launchUri":  "file:///D:/download/file/Doubao/Doubao.exe",
+        "executablePath":  "D:\\download\\file\\Doubao\\Doubao.exe"
+    },
+    {
+        "id":  "desktop-1061728385",
+        "name":  "LiveCaptions",
+        "packageName":  "desktop:livecaptions",
+        "launchUri":  "file:///C:/Windows/system32/LiveCaptions.exe",
+        "executablePath":  "C:\\Windows\\system32\\LiveCaptions.exe"
+    },
+    {
+        "id":  "desktop-1308408417",
+        "name":  "Magnify",
+        "packageName":  "desktop:magnify",
+        "launchUri":  "file:///C:/Windows/system32/magnify.exe",
+        "executablePath":  "C:\\Windows\\system32\\magnify.exe"
+    },
+    {
+        "id":  "desktop-2055480643",
+        "name":  "Narrator",
+        "packageName":  "desktop:narrator",
+        "launchUri":  "file:///C:/Windows/system32/narrator.exe",
+        "executablePath":  "C:\\Windows\\system32\\narrator.exe"
+    },
+    {
+        "id":  "desktop-1950737555",
+        "name":  "On-Screen Keyboard",
+        "packageName":  "desktop:osk",
+        "launchUri":  "file:///C:/Windows/system32/osk.exe",
+        "executablePath":  "C:\\Windows\\system32\\osk.exe"
+    },
+    {
+        "id":  "desktop-1393943880",
+        "name":  "VoiceAccess",
+        "packageName":  "desktop:voiceaccess",
+        "launchUri":  "file:///C:/Windows/system32/voiceaccess.exe",
+        "executablePath":  "C:\\Windows\\system32\\voiceaccess.exe"
+    },
+    {
+        "id":  "desktop-557504992",
+        "name":  "Antigravity",
+        "packageName":  "desktop:antigravity",
+        "launchUri":  "file:///D:/download/file/Antigravity/Antigravity.exe",
+        "executablePath":  "D:\\download\\file\\Antigravity\\Antigravity.exe"
+    },
+    {
+        "id":  "desktop-883111624",
+        "name":  "CodeBuddy CN",
+        "packageName":  "desktop:codebuddy cn",
+        "launchUri":  "file:///D:/download/file/CodeBuddy%20CN/CodeBuddy%20CN.exe",
+        "executablePath":  "D:\\download\\file\\CodeBuddy CN\\CodeBuddy CN.exe"
+    },
+    {
+        "id":  "desktop-528292000",
+        "name":  "Cursor",
+        "packageName":  "desktop:cursor",
+        "launchUri":  "file:///D:/download/file/cursor/Cursor.exe",
+        "executablePath":  "D:\\download\\file\\cursor\\Cursor.exe"
+    },
+    {
+        "id":  "desktop-949324450",
+        "name":  "Kiro",
+        "packageName":  "desktop:kiro",
+        "launchUri":  "file:///D:/download/file/Kiro/Kiro.exe",
+        "executablePath":  "D:\\download\\file\\Kiro\\Kiro.exe"
+    },
+    {
+        "id":  "desktop-265211904",
+        "name":  "Qoder",
+        "packageName":  "desktop:qoder",
+        "launchUri":  "file:///D:/download/file/Qoder/Qoder.exe",
+        "executablePath":  "D:\\download\\file\\Qoder\\Qoder.exe"
+    },
+    {
+        "id":  "desktop-391084490",
+        "name":  "SnoreToast",
+        "packageName":  "desktop:snoretoast-x64",
+        "launchUri":  "file:///D:/download/file/nvm/v22.12.0/node_modules/@iflow-ai/iflow-cli/node_modules/node-notifier/vendor/snoreToast/snoretoast-x64.exe",
+        "executablePath":  "D:\\download\\file\\nvm\\v22.12.0\\node_modules\\@iflow-ai\\iflow-cli\\node_modules\\node-notifier\\vendor\\snoreToast\\snoretoast-x64.exe"
+    },
+    {
+        "id":  "desktop-267840313",
+        "name":  "Snipaste",
+        "packageName":  "desktop:snipaste",
+        "launchUri":  "file:///D:/download/exe/Snipaste-2.10.6-x64/Snipaste.exe",
+        "executablePath":  "D:\\download\\exe\\Snipaste-2.10.6-x64\\Snipaste.exe"
+    },
+    {
+        "id":  "desktop-698708832",
+        "name":  "Command Prompt",
+        "packageName":  "desktop:cmd",
+        "launchUri":  "file:///C:/Windows/system32/cmd.exe",
+        "executablePath":  "C:\\Windows\\system32\\cmd.exe"
+    },
+    {
+        "id":  "desktop-205781344",
+        "name":  "Trae CN",
+        "packageName":  "desktop:trae cn",
+        "launchUri":  "file:///D:/download/file/Trae%20CN/Trae%20CN.exe",
+        "executablePath":  "D:\\download\\file\\Trae CN\\Trae CN.exe"
+    },
+    {
+        "id":  "desktop-226565717",
+        "name":  "Visual Studio Code",
+        "packageName":  "desktop:code",
+        "launchUri":  "file:///D:/download/file/Microsoft%20VS%20Code/Code.exe",
+        "executablePath":  "D:\\download\\file\\Microsoft VS Code\\Code.exe"
+    },
+    {
+        "id":  "desktop-1488870262",
+        "name":  "Windows PowerShell (x86)",
+        "packageName":  "desktop:powershell",
+        "launchUri":  "file:///C:/Windows/SysWOW64/WindowsPowerShell/v1.0/powershell.exe",
+        "executablePath":  "C:\\Windows\\SysWOW64\\WindowsPowerShell\\v1.0\\powershell.exe"
+    },
+    {
+        "id":  "desktop-1612084024",
+        "name":  "Windsurf",
+        "packageName":  "desktop:windsurf",
+        "launchUri":  "file:///D:/download/file/Windsurf/Windsurf.exe",
+        "executablePath":  "D:\\download\\file\\Windsurf\\Windsurf.exe"
+    },
+    {
+        "id":  "desktop-578454240",
+        "name":  "配置工具",
+        "packageName":  "desktop:ksomisc",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/WPS%20Office/12.1.0.24657/office6/ksomisc.exe",
+        "executablePath":  "C:\\Program Files (x86)\\WPS Office\\12.1.0.24657\\office6\\ksomisc.exe"
+    },
+    {
+        "id":  "desktop-1549581024",
+        "name":  "Zed",
+        "packageName":  "desktop:zed",
+        "launchUri":  "file:///D:/download/file/Zed/Zed.exe",
+        "executablePath":  "D:\\download\\file\\Zed\\Zed.exe"
+    },
+    {
+        "id":  "desktop-1066846996",
+        "name":  "智谱清言",
+        "packageName":  "desktop:智谱清言",
+        "launchUri":  "file:///D:/download/file/chatglm/智谱清言.exe",
+        "executablePath":  "D:\\download\\file\\chatglm\\智谱清言.exe"
+    },
+    {
+        "id":  "desktop-1695494403",
+        "name":  "卸载宝塔面板",
+        "packageName":  "desktop:uninst",
+        "launchUri":  "file:///D:/download/file/BtSoft/uninst.exe",
+        "executablePath":  "D:\\download\\file\\BtSoft\\uninst.exe"
+    },
+    {
+        "id":  "desktop-311122110",
+        "name":  "宝塔面板",
+        "packageName":  "desktop:bttools",
+        "launchUri":  "file:///D:/download/file/BtSoft/panel/script/BtTools.exe",
+        "executablePath":  "D:\\download\\file\\BtSoft\\panel\\script\\BtTools.exe"
+    },
+    {
+        "id":  "desktop-587955585",
+        "name":  "卸载微信开发者工具",
+        "packageName":  "desktop:卸载微信开发者工具",
+        "launchUri":  "file:///D:/download/file/微信web开发者工具/卸载微信开发者工具.exe",
+        "executablePath":  "D:\\download\\file\\微信web开发者工具\\卸载微信开发者工具.exe"
+    },
+    {
+        "id":  "desktop-224305264",
+        "name":  "微信开发者工具",
+        "packageName":  "desktop:微信开发者工具",
+        "launchUri":  "file:///D:/download/file/微信web开发者工具/微信开发者工具.exe",
+        "executablePath":  "D:\\download\\file\\微信web开发者工具\\微信开发者工具.exe"
+    },
+    {
+        "id":  "desktop-1317315576",
+        "name":  "卸载",
+        "packageName":  "desktop:qyuninst",
+        "launchUri":  "file:///D:/download/file/IQIYI%20Video/LStyle/14.2.0.9800/QyUninst.exe",
+        "executablePath":  "D:\\download\\file\\IQIYI Video\\LStyle\\14.2.0.9800\\QyUninst.exe"
+    },
+    {
+        "id":  "desktop-358488178",
+        "name":  "百度网盘",
+        "packageName":  "desktop:baidunetdisk",
+        "launchUri":  "file:///D:/download/file/BaiduNetdisk/BaiduNetdisk.exe",
+        "executablePath":  "D:\\download\\file\\BaiduNetdisk\\BaiduNetdisk.exe"
+    },
+    {
+        "id":  "desktop-1173556930",
+        "name":  "Excel",
+        "packageName":  "desktop:excel",
+        "launchUri":  "file:///C:/Program%20Files/Microsoft%20Office/root/Office16/EXCEL.EXE",
+        "executablePath":  "C:\\Program Files\\Microsoft Office\\root\\Office16\\EXCEL.EXE"
+    },
+    {
+        "id":  "desktop-1536505104",
+        "name":  "Firefox 隐私浏览",
+        "packageName":  "desktop:private_browsing",
+        "launchUri":  "file:///C:/Program%20Files/Mozilla%20Firefox/private_browsing.exe",
+        "executablePath":  "C:\\Program Files\\Mozilla Firefox\\private_browsing.exe"
+    },
+    {
+        "id":  "desktop-1487117974",
+        "name":  "Firefox",
+        "packageName":  "desktop:firefox",
+        "launchUri":  "file:///C:/Program%20Files/Mozilla%20Firefox/firefox.exe",
+        "executablePath":  "C:\\Program Files\\Mozilla Firefox\\firefox.exe"
+    },
+    {
+        "id":  "desktop-1438052495",
+        "name":  "Google Chrome",
+        "packageName":  "desktop:chrome",
+        "launchUri":  "file:///C:/Program%20Files/Google/Chrome/Application/chrome.exe",
+        "executablePath":  "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe"
+    },
+    {
+        "id":  "desktop-252986745",
+        "name":  "Microsoft Edge",
+        "packageName":  "desktop:msedge",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/Microsoft/Edge/Application/msedge.exe",
+        "executablePath":  "C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe"
+    },
+    {
+        "id":  "desktop-1962622037",
+        "name":  "OneNote",
+        "packageName":  "desktop:onenote",
+        "launchUri":  "file:///C:/Program%20Files/Microsoft%20Office/root/Office16/ONENOTE.EXE",
+        "executablePath":  "C:\\Program Files\\Microsoft Office\\root\\Office16\\ONENOTE.EXE"
+    },
+    {
+        "id":  "desktop-2097672482",
+        "name":  "PowerPoint",
+        "packageName":  "desktop:powerpnt",
+        "launchUri":  "file:///C:/Program%20Files/Microsoft%20Office/root/Office16/POWERPNT.EXE",
+        "executablePath":  "C:\\Program Files\\Microsoft Office\\root\\Office16\\POWERPNT.EXE"
+    },
+    {
+        "id":  "desktop-2123950529",
+        "name":  "Sublime Text",
+        "packageName":  "desktop:sublime_text",
+        "launchUri":  "file:///D:/download/file/Sublime%20Text/sublime_text.exe",
+        "executablePath":  "D:\\download\\file\\Sublime Text\\sublime_text.exe"
+    },
+    {
+        "id":  "desktop-280497035",
+        "name":  "WinSCP",
+        "packageName":  "desktop:winscp",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/WinSCP/WinSCP.exe",
+        "executablePath":  "C:\\Program Files (x86)\\WinSCP\\WinSCP.exe"
+    },
+    {
+        "id":  "desktop-1389537393",
+        "name":  "Word",
+        "packageName":  "desktop:winword",
+        "launchUri":  "file:///C:/Program%20Files/Microsoft%20Office/root/Office16/WINWORD.EXE",
+        "executablePath":  "C:\\Program Files\\Microsoft Office\\root\\Office16\\WINWORD.EXE"
+    },
+    {
+        "id":  "desktop-1224585045",
+        "name":  "WSL Settings",
+        "packageName":  "desktop:wsl",
+        "launchUri":  "file:///C:/Windows/Installer/{2CCE677F-C28B-4AE1-BAC4-2F1A37049E70}/wsl.ico",
+        "executablePath":  "C:\\Windows\\Installer\\{2CCE677F-C28B-4AE1-BAC4-2F1A37049E70}\\wsl.ico"
+    },
+    {
+        "id":  "desktop-1281548581",
+        "name":  "腾讯会议",
+        "packageName":  "desktop:wemeetapp",
+        "launchUri":  "file:///D:/download/file/WeMeet/WeMeetApp.exe",
+        "executablePath":  "D:\\download\\file\\WeMeet\\WeMeetApp.exe"
+    },
+    {
+        "id":  "desktop-425760096",
+        "name":  "酷狗音乐",
+        "packageName":  "desktop:kugou",
+        "launchUri":  "file:///D:/download/file/KGMusic/KuGou.exe",
+        "executablePath":  "D:\\download\\file\\KGMusic\\KuGou.exe"
+    },
+    {
+        "id":  "desktop-2040175026",
+        "name":  "Remote Desktop Connection",
+        "packageName":  "desktop:mstsc",
+        "launchUri":  "file:///C:/Windows/system32/mstsc.exe",
+        "executablePath":  "C:\\Windows\\system32\\mstsc.exe"
+    },
+    {
+        "id":  "desktop-1951678197",
+        "name":  "Steps Recorder",
+        "packageName":  "desktop:psr",
+        "launchUri":  "file:///C:/Windows/system32/psr.exe",
+        "executablePath":  "C:\\Windows\\system32\\psr.exe"
+    },
+    {
+        "id":  "desktop-1639786204",
+        "name":  "Windows Media Player Legacy",
+        "packageName":  "desktop:wmplayer",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/Windows%20Media%20Player/wmplayer.exe",
+        "executablePath":  "C:\\Program Files (x86)\\Windows Media Player\\wmplayer.exe"
+    },
+    {
+        "id":  "desktop-1906188834",
+        "name":  "Character Map",
+        "packageName":  "desktop:charmap",
+        "launchUri":  "file:///C:/Windows/system32/charmap.exe",
+        "executablePath":  "C:\\Windows\\system32\\charmap.exe"
+    },
+    {
+        "id":  "desktop-1814708583",
+        "name":  "Component Services",
+        "packageName":  "desktop:comexp",
+        "launchUri":  "file:///C:/Windows/system32/comexp.msc",
+        "executablePath":  "C:\\Windows\\system32\\comexp.msc"
+    },
+    {
+        "id":  "desktop-370880713",
+        "name":  "Computer Management",
+        "packageName":  "desktop:compmgmt",
+        "launchUri":  "file:///C:/Windows/system32/compmgmt.msc",
+        "executablePath":  "C:\\Windows\\system32\\compmgmt.msc"
+    },
+    {
+        "id":  "desktop-1287613261",
+        "name":  "dfrgui",
+        "packageName":  "desktop:dfrgui",
+        "launchUri":  "file:///C:/Windows/system32/dfrgui.exe",
+        "executablePath":  "C:\\Windows\\system32\\dfrgui.exe"
+    },
+    {
+        "id":  "desktop-1215548513",
+        "name":  "Disk Cleanup",
+        "packageName":  "desktop:cleanmgr",
+        "launchUri":  "file:///C:/Windows/system32/cleanmgr.exe",
+        "executablePath":  "C:\\Windows\\system32\\cleanmgr.exe"
+    },
+    {
+        "id":  "desktop-612005050",
+        "name":  "Event Viewer",
+        "packageName":  "desktop:eventvwr",
+        "launchUri":  "file:///C:/Windows/system32/eventvwr.msc",
+        "executablePath":  "C:\\Windows\\system32\\eventvwr.msc"
+    },
+    {
+        "id":  "desktop-755782790",
+        "name":  "iSCSI Initiator",
+        "packageName":  "desktop:iscsicpl",
+        "launchUri":  "file:///C:/Windows/system32/iscsicpl.exe",
+        "executablePath":  "C:\\Windows\\system32\\iscsicpl.exe"
+    },
+    {
+        "id":  "desktop-1170499824",
+        "name":  "Memory Diagnostics Tool",
+        "packageName":  "desktop:mdsched",
+        "launchUri":  "file:///C:/Windows/system32/MdSched.exe",
+        "executablePath":  "C:\\Windows\\system32\\MdSched.exe"
+    },
+    {
+        "id":  "desktop-1176425342",
+        "name":  "ODBC Data Sources (32-bit)",
+        "packageName":  "desktop:odbcad32",
+        "launchUri":  "file:///C:/Windows/syswow64/odbcad32.exe",
+        "executablePath":  "C:\\Windows\\syswow64\\odbcad32.exe"
+    },
+    {
+        "id":  "desktop-1432491674",
+        "name":  "Performance Monitor",
+        "packageName":  "desktop:perfmon",
+        "launchUri":  "file:///C:/Windows/system32/perfmon.msc",
+        "executablePath":  "C:\\Windows\\system32\\perfmon.msc"
+    },
+    {
+        "id":  "desktop-1802340713",
+        "name":  "RecoveryDrive",
+        "packageName":  "desktop:recoverydrive",
+        "launchUri":  "file:///C:/Windows/system32/RecoveryDrive.exe",
+        "executablePath":  "C:\\Windows\\system32\\RecoveryDrive.exe"
+    },
+    {
+        "id":  "desktop-1849583106",
+        "name":  "Registry Editor",
+        "packageName":  "desktop:regedit",
+        "launchUri":  "file:///C:/Windows/regedit.exe",
+        "executablePath":  "C:\\Windows\\regedit.exe"
+    },
+    {
+        "id":  "desktop-2103648463",
+        "name":  "services",
+        "packageName":  "desktop:services",
+        "launchUri":  "file:///C:/Windows/system32/services.msc",
+        "executablePath":  "C:\\Windows\\system32\\services.msc"
+    },
+    {
+        "id":  "desktop-1285845106",
+        "name":  "System Configuration",
+        "packageName":  "desktop:msconfig",
+        "launchUri":  "file:///C:/Windows/system32/msconfig.exe",
+        "executablePath":  "C:\\Windows\\system32\\msconfig.exe"
+    },
+    {
+        "id":  "desktop-1833848185",
+        "name":  "System Information",
+        "packageName":  "desktop:msinfo32",
+        "launchUri":  "file:///C:/Windows/system32/msinfo32.exe",
+        "executablePath":  "C:\\Windows\\system32\\msinfo32.exe"
+    },
+    {
+        "id":  "desktop-1708249554",
+        "name":  "Task Scheduler",
+        "packageName":  "desktop:taskschd",
+        "launchUri":  "file:///C:/Windows/system32/taskschd.msc",
+        "executablePath":  "C:\\Windows\\system32\\taskschd.msc"
+    },
+    {
+        "id":  "desktop-1367546044",
+        "name":  "Windows Defender Firewall with Advanced Security",
+        "packageName":  "desktop:wf",
+        "launchUri":  "file:///C:/Windows/system32/WF.msc",
+        "executablePath":  "C:\\Windows\\system32\\WF.msc"
+    },
+    {
+        "id":  "desktop-949737496",
+        "name":  "Bandizip",
+        "packageName":  "desktop:bandizip",
+        "launchUri":  "file:///C:/Program%20Files/Bandizip/Bandizip.exe",
+        "executablePath":  "C:\\Program Files\\Bandizip\\Bandizip.exe"
+    },
+    {
+        "id":  "desktop-92443382",
+        "name":  "CMCC办公VPN安装目录",
+        "packageName":  "desktop:v5vpn",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/V5VPN",
+        "executablePath":  "C:\\Program Files (x86)\\V5VPN"
+    },
+    {
+        "id":  "desktop-1749439909",
+        "name":  "卸载客户端程序",
+        "packageName":  "desktop:vpninstall",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/V5VPN/VPNInstall.exe",
+        "executablePath":  "C:\\Program Files (x86)\\V5VPN\\VPNInstall.exe"
+    },
+    {
+        "id":  "desktop-1775705568",
+        "name":  "Ditto",
+        "packageName":  "desktop:ditto",
+        "launchUri":  "file:///D:/download/file/Ditto/Ditto.exe",
+        "executablePath":  "D:\\download\\file\\Ditto\\Ditto.exe"
+    },
+    {
+        "id":  "desktop-1648865213",
+        "name":  "Uninstall",
+        "packageName":  "desktop:unins000",
+        "launchUri":  "file:///D:/download/file/Ditto/unins000.exe",
+        "executablePath":  "D:\\download\\file\\Ditto\\unins000.exe"
+    },
+    {
+        "id":  "desktop-2092937546",
+        "name":  "MindMaster",
+        "packageName":  "desktop:mindmaster",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/EdrawSoft/MindMaster/MindMaster.exe",
+        "executablePath":  "C:\\Program Files (x86)\\EdrawSoft\\MindMaster\\MindMaster.exe"
+    },
+    {
+        "id":  "desktop-1296824320",
+        "name":  "ePass3000GM-G管理工具",
+        "packageName":  "desktop:mgr_3kgmg",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/Feitian/ePass3000GM-G/Mgr_3KGMG.exe",
+        "executablePath":  "C:\\Program Files (x86)\\Feitian\\ePass3000GM-G\\Mgr_3KGMG.exe"
+    },
+    {
+        "id":  "desktop-1469469771",
+        "name":  "Git Bash",
+        "packageName":  "desktop:git-bash",
+        "launchUri":  "file:///C:/Program%20Files/Git/git-bash.exe",
+        "executablePath":  "C:\\Program Files\\Git\\git-bash.exe"
+    },
+    {
+        "id":  "desktop-30075047",
+        "name":  "Git CMD",
+        "packageName":  "desktop:git-cmd",
+        "launchUri":  "file:///C:/Program%20Files/Git/git-cmd.exe",
+        "executablePath":  "C:\\Program Files\\Git\\git-cmd.exe"
+    },
+    {
+        "id":  "desktop-195721240",
+        "name":  "Git GUI",
+        "packageName":  "desktop:git-gui",
+        "launchUri":  "file:///C:/Program%20Files/Git/cmd/git-gui.exe",
+        "executablePath":  "C:\\Program Files\\Git\\cmd\\git-gui.exe"
+    },
+    {
+        "id":  "desktop-467816141",
+        "name":  "Git Release Notes",
+        "packageName":  "desktop:releasenotes",
+        "launchUri":  "file:///C:/Program%20Files/Git/ReleaseNotes.html",
+        "executablePath":  "C:\\Program Files\\Git\\ReleaseNotes.html"
+    },
+    {
+        "id":  "desktop-531403994",
+        "name":  "Uninstall Go",
+        "packageName":  "desktop:msiexec",
+        "launchUri":  "file:///C:/Windows/System32/msiexec.exe",
+        "executablePath":  "C:\\Windows\\System32\\msiexec.exe"
+    },
+    {
+        "id":  "desktop-47549485",
+        "name":  "DevEco Studio",
+        "packageName":  "desktop:devecostudio64",
+        "launchUri":  "file:///D:/download/file/DevEco%20Studio/bin/devecostudio64.exe",
+        "executablePath":  "D:\\download\\file\\DevEco Studio\\bin\\devecostudio64.exe"
+    },
+    {
+        "id":  "desktop-788208370",
+        "name":  "云空间",
+        "packageName":  "desktop:huawei cloud",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/Cloud/HUAWEI%20Cloud.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\Cloud\\HUAWEI Cloud.exe"
+    },
+    {
+        "id":  "desktop-552418323",
+        "name":  "华为应用市场",
+        "packageName":  "desktop:appgallery",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/AppGallery/AppGallery.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\AppGallery\\AppGallery.exe"
+    },
+    {
+        "id":  "desktop-1681098924",
+        "name":  "华为浏览器",
+        "packageName":  "desktop:huaweibrowser",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/Browser/HuaweiBrowser.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\Browser\\HuaweiBrowser.exe"
+    },
+    {
+        "id":  "desktop-1198267932",
+        "name":  "HMS Core 设置",
+        "packageName":  "desktop:hmscoresettings",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/HMS%20Core/HMSCoreSettings.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\HMS Core\\HMSCoreSettings.exe"
+    },
+    {
+        "id":  "desktop-151881499",
+        "name":  "华为控制中心",
+        "packageName":  "desktop:hwmdccenter",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/PCManager/HwMdcCenter.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\PCManager\\HwMdcCenter.exe"
+    },
+    {
+        "id":  "desktop-253614209",
+        "name":  "华为电脑管家",
+        "packageName":  "desktop:pcmanager",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/PCManager/PCManager.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\PCManager\\PCManager.exe"
+    },
+    {
+        "id":  "desktop-2141674575",
+        "name":  "AI 空间",
+        "packageName":  "desktop:wisdomdispatch",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/Personal%20Center/WisdomDispatch.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\Personal Center\\WisdomDispatch.exe"
+    },
+    {
+        "id":  "desktop-277676515",
+        "name":  "个人中心",
+        "packageName":  "desktop:personalcenterforwindowscs",
+        "launchUri":  "file:///C:/Program%20Files/Huawei/Personal%20Center/PersonalCenterForWindowsCs.exe",
+        "executablePath":  "C:\\Program Files\\Huawei\\Personal Center\\PersonalCenterForWindowsCs.exe"
+    },
+    {
+        "id":  "desktop-112650925",
+        "name":  "IntelliJ IDEA 2025.1.4.1",
+        "packageName":  "desktop:idea64",
+        "launchUri":  "file:///D:/download/file/IntelliJ%20IDEA%202025.1.4.1/bin/idea64.exe",
+        "executablePath":  "D:\\download\\file\\IntelliJ IDEA 2025.1.4.1\\bin\\idea64.exe"
+    },
+    {
+        "id":  "desktop-2096871095",
+        "name":  "Office 语言首选项",
+        "packageName":  "desktop:setlang",
+        "launchUri":  "file:///C:/Program%20Files/Microsoft%20Office/root/Office16/SETLANG.EXE",
+        "executablePath":  "C:\\Program Files\\Microsoft Office\\root\\Office16\\SETLANG.EXE"
+    },
+    {
+        "id":  "desktop-1444755370",
+        "name":  "MySQL Shell",
+        "packageName":  "desktop:mysqlsh",
+        "launchUri":  "file:///C:/Program%20Files/MySQL/MySQL%20Shell%208.0/bin/mysqlsh.exe",
+        "executablePath":  "C:\\Program Files\\MySQL\\MySQL Shell 8.0\\bin\\mysqlsh.exe"
+    },
+    {
+        "id":  "desktop-1300238280",
+        "name":  "MySQL Workbench 8.0 CE",
+        "packageName":  "desktop:mysqlworkbench",
+        "launchUri":  "file:///C:/Program%20Files/MySQL/MySQL%20Workbench%208.0/MySQLWorkbench.exe",
+        "executablePath":  "C:\\Program Files\\MySQL\\MySQL Workbench 8.0\\MySQLWorkbench.exe"
+    },
+    {
+        "id":  "desktop-1985305913",
+        "name":  "MySQL Installer - Community",
+        "packageName":  "desktop:mysqlinstaller",
+        "launchUri":  "file:///C:/Program%20Files%20(x86)/MySQL/MySQL%20Installer%20for%20Windows/MySQLInstaller.exe",
+        "executablePath":  "C:\\Program Files (x86)\\MySQL\\MySQL Installer for Windows\\MySQLInstaller.exe"
+    },
+    {
+        "id":  "desktop-225993084",
+        "name":  "MySQL 8.0 Command Line Client - Unicode",
+        "packageName":  "desktop:mysql",
+        "launchUri":  "file:///C:/Program%20Files/MySQL/MySQL%20Server%208.0/bin/mysql.exe",
+        "executablePath":  "C:\\Program Files\\MySQL\\MySQL Server 8.0\\bin\\mysql.exe"
+    },
+    {
+        "id":  "desktop-949110560",
+        "name":  "nvm",
+        "packageName":  "desktop:nvm",
+        "launchUri":  "file:///D:/download/file/nvm/nvm.exe",
+        "executablePath":  "D:\\download\\file\\nvm\\nvm.exe"
+    },
+    {
+        "id":  "desktop-1121582307",
+        "name":  "phpstudy_pro",
+        "packageName":  "desktop:phpstudy_pro",
+        "launchUri":  "file:///D:/download/file/phpstudy_pro/COM/phpstudy_pro.exe",
+        "executablePath":  "D:\\download\\file\\phpstudy_pro\\COM\\phpstudy_pro.exe"
+    },
+    {
+        "id":  "desktop-1580673309",
+        "name":  "SoftEther VPN Client 管理工具",
+        "packageName":  "desktop:vpncmgr_x64",
+        "launchUri":  "file:///D:/download/file/SoftEther%20VPN%20Client/vpncmgr_x64.exe",
+        "executablePath":  "D:\\download\\file\\SoftEther VPN Client\\vpncmgr_x64.exe"
+    },
+    {
+        "id":  "desktop-1124458380",
+        "name":  "SoftEther VPN 命令行实用工具(vpncmd)",
+        "packageName":  "desktop:vpncmd_x64",
+        "launchUri":  "file:///D:/download/file/SoftEther%20VPN%20Client/vpncmd_x64.exe",
+        "executablePath":  "D:\\download\\file\\SoftEther VPN Client\\vpncmd_x64.exe"
+    },
+    {
+        "id":  "desktop-2020894396",
+        "name":  "Web安装工具创建工具",
+        "packageName":  "desktop:vpnsetup",
+        "launchUri":  "file:///D:/download/file/SoftEther%20VPN%20Client/vpnsetup.exe",
+        "executablePath":  "D:\\download\\file\\SoftEther VPN Client\\vpnsetup.exe"
+    },
+    {
+        "id":  "desktop-674623103",
+        "name":  "网络传输速度测量工具",
+        "packageName":  "desktop:vpnclient_x64",
+        "launchUri":  "file:///D:/download/file/SoftEther%20VPN%20Client/vpnclient_x64.exe",
+        "executablePath":  "D:\\download\\file\\SoftEther VPN Client\\vpnclient_x64.exe"
+    },
+    {
+        "id":  "desktop-1329040269",
+        "name":  "Task Manager",
+        "packageName":  "desktop:taskmgr",
+        "launchUri":  "file:///C:/Windows/system32/taskmgr.exe",
+        "executablePath":  "C:\\Windows\\system32\\taskmgr.exe"
+    },
+    {
+        "id":  "desktop-303282362",
+        "name":  "Windows PowerShell ISE (x86)",
+        "packageName":  "desktop:powershell_ise",
+        "launchUri":  "file:///C:/Windows/syswow64/WindowsPowerShell/v1.0/PowerShell_ISE.exe",
+        "executablePath":  "C:\\Windows\\syswow64\\WindowsPowerShell\\v1.0\\PowerShell_ISE.exe"
+    },
+    {
+        "id":  "desktop-1653295872",
+        "name":  "云视讯",
+        "packageName":  "desktop:vilin",
+        "launchUri":  "file:///D:/download/file/Vilin/ViLin.exe",
+        "executablePath":  "D:\\download\\file\\Vilin\\ViLin.exe"
+    },
+    {
+        "id":  "desktop-1347741568",
+        "name":  "卸载向日葵远程控制",
+        "packageName":  "desktop:sunloginclient",
+        "launchUri":  "file:///D:/download/file/SunloginClient/SunloginClient.exe",
+        "executablePath":  "D:\\download\\file\\SunloginClient\\SunloginClient.exe"
+    },
+    {
+        "id":  "desktop-1088279365",
+        "name":  "使用说明",
+        "packageName":  "desktop:pureset",
+        "launchUri":  "file:///C:/Program%20Files/Pure%20Codec/PureSet.htm",
+        "executablePath":  "C:\\Program Files\\Pure Codec\\PureSet.htm"
+    },
+    {
+        "id":  "desktop-1737872719",
+        "name":  "完美解码",
+        "packageName":  "desktop:potplayermini64",
+        "launchUri":  "file:///C:/Program%20Files/Pure%20Codec/x64/PotPlayerMini64.exe",
+        "executablePath":  "C:\\Program Files\\Pure Codec\\x64\\PotPlayerMini64.exe"
+    },
+    {
+        "id":  "desktop-1566167820",
+        "name":  "卸载微信",
+        "packageName":  "desktop:uninstall",
+        "launchUri":  "file:///D:/download/file/Weixin/Uninstall.exe",
+        "executablePath":  "D:\\download\\file\\Weixin\\Uninstall.exe"
+    },
+    {
+        "id":  "desktop-1850139424",
+        "name":  "微信",
+        "packageName":  "desktop:weixin",
+        "launchUri":  "file:///D:/download/file/Weixin/Weixin.exe",
+        "executablePath":  "D:\\download\\file\\Weixin\\Weixin.exe"
+    },
+    {
+        "id":  "desktop-3218082",
+        "name":  "火绒安全软件",
+        "packageName":  "desktop:hipsmain",
+        "launchUri":  "file:///D:/download/file/Huorong/Sysdiag/bin/HipsMain.exe",
+        "executablePath":  "D:\\download\\file\\Huorong\\Sysdiag\\bin\\HipsMain.exe"
+    },
+    {
+        "id":  "desktop-1204437811",
+        "name":  "火绒日志",
+        "packageName":  "desktop:hipslog",
+        "launchUri":  "file:///D:/download/file/Huorong/Sysdiag/bin/HipsLog.exe",
+        "executablePath":  "D:\\download\\file\\Huorong\\Sysdiag\\bin\\HipsLog.exe"
+    },
+    {
+        "id":  "desktop-693658336",
+        "name":  "移动办公",
+        "packageName":  "desktop:yidongbangong",
+        "launchUri":  "file:///D:/download/file/yidongbangong/yidongbangong.exe",
+        "executablePath":  "D:\\download\\file\\yidongbangong\\yidongbangong.exe"
+    },
+    {
+        "id":  "desktop-713529760",
+        "name":  "卸载 腾讯会议",
+        "packageName":  "desktop:wemeetuninstall",
+        "launchUri":  "file:///D:/download/file/WeMeet/3.39.2.418/WeMeetUninstall.exe",
+        "executablePath":  "D:\\download\\file\\WeMeet\\3.39.2.418\\WeMeetUninstall.exe"
+    },
+    {
+        "id":  "desktop-2114327360",
+        "name":  "WeGame",
+        "packageName":  "desktop:wegame",
+        "launchUri":  "file:///D:/download/file/WeGame/wegame.exe",
+        "executablePath":  "D:\\download\\file\\WeGame\\wegame.exe"
+    },
+    {
+        "id":  "desktop-1556146026",
+        "name":  "WeGame卸载",
+        "packageName":  "desktop:uninstall_complete",
+        "launchUri":  "file:///D:/download/file/WeGame/uninstall_complete.exe",
+        "executablePath":  "D:\\download\\file\\WeGame\\uninstall_complete.exe"
+    },
+    {
+        "id":  "desktop-13613122",
+        "name":  "QQ",
+        "packageName":  "desktop:qq",
+        "launchUri":  "file:///D:/download/file/QQ.exe",
+        "executablePath":  "D:\\download\\file\\QQ.exe"
+    },
+    {
+        "id":  "desktop-324869051",
+        "name":  "DingTalk Official Website",
+        "packageName":  "desktop:dingtalk official website",
+        "launchUri":  "file:///D:/download/file/DingDing/DingTalk%20Official%20Website.url",
+        "executablePath":  "D:\\download\\file\\DingDing\\DingTalk Official Website.url"
+    },
+    {
+        "id":  "desktop-2098299386",
+        "name":  "钉钉",
+        "packageName":  "desktop:dingtalklauncher",
+        "launchUri":  "file:///D:/download/file/DingDing/DingtalkLauncher.exe",
+        "executablePath":  "D:\\download\\file\\DingDing\\DingtalkLauncher.exe"
+    },
+    {
+        "id":  "desktop-50732832",
+        "name":  "飞火动态壁纸",
+        "packageName":  "desktop:ffwallpaper",
+        "launchUri":  "file:///D:/download/file/FFWallpaper/FFWallpaper.exe",
+        "executablePath":  "D:\\download\\file\\FFWallpaper\\FFWallpaper.exe"
+    },
+    {
+        "id":  "project-1418114514",
+        "name":  "Project: acorn",
+        "packageName":  "project:acorn",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/acorn.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\acorn.cmd"
+    },
+    {
+        "id":  "project-141010349",
+        "name":  "Project: apple-utils",
+        "packageName":  "project:apple-utils",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/apple-utils.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\apple-utils.cmd"
+    },
+    {
+        "id":  "project-1356590480",
+        "name":  "Project: baseline-browser-mapping",
+        "packageName":  "project:baseline-browser-mapping",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/baseline-browser-mapping.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\baseline-browser-mapping.cmd"
+    },
+    {
+        "id":  "project-1216929408",
+        "name":  "Project: browserslist",
+        "packageName":  "project:browserslist",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/browserslist.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\browserslist.cmd"
+    },
+    {
+        "id":  "project-412557626",
+        "name":  "Project: bunyan",
+        "packageName":  "project:bunyan",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/bunyan.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\bunyan.cmd"
+    },
+    {
+        "id":  "project-2026109994",
+        "name":  "Project: cdl",
+        "packageName":  "project:cdl",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/cdl.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\cdl.cmd"
+    },
+    {
+        "id":  "project-2116414793",
+        "name":  "Project: cssesc",
+        "packageName":  "project:cssesc",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/cssesc.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\cssesc.cmd"
+    },
+    {
+        "id":  "project-170133905",
+        "name":  "Project: detect-libc",
+        "packageName":  "project:detect-libc",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/detect-libc.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\detect-libc.cmd"
+    },
+    {
+        "id":  "project-266288184",
+        "name":  "Project: eas",
+        "packageName":  "project:eas",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/eas.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\eas.cmd"
+    },
+    {
+        "id":  "project-1831979679",
+        "name":  "Project: ejs",
+        "packageName":  "project:ejs",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ejs.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ejs.cmd"
+    },
+    {
+        "id":  "project-1713227924",
+        "name":  "Project: envinfo",
+        "packageName":  "project:envinfo",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/envinfo.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\envinfo.cmd"
+    },
+    {
+        "id":  "project-254377956",
+        "name":  "Project: esparse",
+        "packageName":  "project:esparse",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/esparse.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\esparse.cmd"
+    },
+    {
+        "id":  "project-823404041",
+        "name":  "Project: esvalidate",
+        "packageName":  "project:esvalidate",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/esvalidate.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\esvalidate.cmd"
+    },
+    {
+        "id":  "project-955179487",
+        "name":  "Project: excpretty",
+        "packageName":  "project:excpretty",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/excpretty.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\excpretty.cmd"
+    },
+    {
+        "id":  "project-447465735",
+        "name":  "Project: expo-internal",
+        "packageName":  "project:expo-internal",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/expo-internal.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\expo-internal.cmd"
+    },
+    {
+        "id":  "project-970633015",
+        "name":  "Project: expo-modules-autolinking",
+        "packageName":  "project:expo-modules-autolinking",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/expo-modules-autolinking.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\expo-modules-autolinking.cmd"
+    },
+    {
+        "id":  "project-399996201",
+        "name":  "Project: expo",
+        "packageName":  "project:expo",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/expo.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\expo.cmd"
+    },
+    {
+        "id":  "project-546641821",
+        "name":  "Project: fingerprint",
+        "packageName":  "project:fingerprint",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/fingerprint.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\fingerprint.cmd"
+    },
+    {
+        "id":  "project-135124457",
+        "name":  "Project: glob",
+        "packageName":  "project:glob",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/glob.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\glob.cmd"
+    },
+    {
+        "id":  "project-833693916",
+        "name":  "Project: gradle-to-js",
+        "packageName":  "project:gradle-to-js",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/gradle-to-js.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\gradle-to-js.cmd"
+    },
+    {
+        "id":  "project-330731356",
+        "name":  "Project: image-size",
+        "packageName":  "project:image-size",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/image-size.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\image-size.cmd"
+    },
+    {
+        "id":  "project-1543693380",
+        "name":  "Project: is-docker",
+        "packageName":  "project:is-docker",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/is-docker.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\is-docker.cmd"
+    },
+    {
+        "id":  "project-1053528768",
+        "name":  "Project: jake",
+        "packageName":  "project:jake",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/jake.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\jake.cmd"
+    },
+    {
+        "id":  "project-28458275",
+        "name":  "Project: jiti",
+        "packageName":  "project:jiti",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/jiti.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\jiti.cmd"
+    },
+    {
+        "id":  "project-893718926",
+        "name":  "Project: js-yaml",
+        "packageName":  "project:js-yaml",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/js-yaml.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\js-yaml.cmd"
+    },
+    {
+        "id":  "project-981169835",
+        "name":  "Project: jscodeshift",
+        "packageName":  "project:jscodeshift",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/jscodeshift.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\jscodeshift.cmd"
+    },
+    {
+        "id":  "project-1047292375",
+        "name":  "Project: jsesc",
+        "packageName":  "project:jsesc",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/jsesc.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\jsesc.cmd"
+    },
+    {
+        "id":  "project-1402908922",
+        "name":  "Project: json5",
+        "packageName":  "project:json5",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/json5.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\json5.cmd"
+    },
+    {
+        "id":  "project-1692426915",
+        "name":  "Project: lan-network",
+        "packageName":  "project:lan-network",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/lan-network.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\lan-network.cmd"
+    },
+    {
+        "id":  "project-320324475",
+        "name":  "Project: loose-envify",
+        "packageName":  "project:loose-envify",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/loose-envify.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\loose-envify.cmd"
+    },
+    {
+        "id":  "project-1617819397",
+        "name":  "Project: metro-symbolicate",
+        "packageName":  "project:metro-symbolicate",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/metro-symbolicate.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\metro-symbolicate.cmd"
+    },
+    {
+        "id":  "project-1570638390",
+        "name":  "Project: metro",
+        "packageName":  "project:metro",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/metro.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\metro.cmd"
+    },
+    {
+        "id":  "project-393499463",
+        "name":  "Project: mime",
+        "packageName":  "project:mime",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/mime.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\mime.cmd"
+    },
+    {
+        "id":  "project-2077932340",
+        "name":  "Project: mkdirp",
+        "packageName":  "project:mkdirp",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/mkdirp.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\mkdirp.cmd"
+    },
+    {
+        "id":  "project-751401186",
+        "name":  "Project: nanoid",
+        "packageName":  "project:nanoid",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/nanoid.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\nanoid.cmd"
+    },
+    {
+        "id":  "project-428543958",
+        "name":  "Project: ncp",
+        "packageName":  "project:ncp",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ncp.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ncp.cmd"
+    },
+    {
+        "id":  "project-2080235219",
+        "name":  "Project: node-which",
+        "packageName":  "project:node-which",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/node-which.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\node-which.cmd"
+    },
+    {
+        "id":  "project-1775925706",
+        "name":  "Project: parser",
+        "packageName":  "project:parser",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/parser.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\parser.cmd"
+    },
+    {
+        "id":  "project-263909223",
+        "name":  "Project: print-chrome-path",
+        "packageName":  "project:print-chrome-path",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/print-chrome-path.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\print-chrome-path.cmd"
+    },
+    {
+        "id":  "project-666013922",
+        "name":  "Project: qrcode-terminal",
+        "packageName":  "project:qrcode-terminal",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/qrcode-terminal.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\qrcode-terminal.cmd"
+    },
+    {
+        "id":  "project-1823010490",
+        "name":  "Project: rc",
+        "packageName":  "project:rc",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/rc.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\rc.cmd"
+    },
+    {
+        "id":  "project-861829248",
+        "name":  "Project: react-native",
+        "packageName":  "project:react-native",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/react-native.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\react-native.cmd"
+    },
+    {
+        "id":  "project-1878055077",
+        "name":  "Project: regjsparser",
+        "packageName":  "project:regjsparser",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/regjsparser.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\regjsparser.cmd"
+    },
+    {
+        "id":  "project-852217991",
+        "name":  "Project: resolve",
+        "packageName":  "project:resolve",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/resolve.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\resolve.cmd"
+    },
+    {
+        "id":  "project-327358108",
+        "name":  "Project: rimraf",
+        "packageName":  "project:rimraf",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/rimraf.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\rimraf.cmd"
+    },
+    {
+        "id":  "project-1207690133",
+        "name":  "Project: semver",
+        "packageName":  "project:semver",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/semver.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\semver.cmd"
+    },
+    {
+        "id":  "project-1699110222",
+        "name":  "Project: sucrase-node",
+        "packageName":  "project:sucrase-node",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/sucrase-node.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\sucrase-node.cmd"
+    },
+    {
+        "id":  "project-1342135661",
+        "name":  "Project: sucrase",
+        "packageName":  "project:sucrase",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/sucrase.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\sucrase.cmd"
+    },
+    {
+        "id":  "project-1434085289",
+        "name":  "Project: tailwind",
+        "packageName":  "project:tailwind",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/tailwind.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\tailwind.cmd"
+    },
+    {
+        "id":  "project-285692764",
+        "name":  "Project: tailwindcss",
+        "packageName":  "project:tailwindcss",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/tailwindcss.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\tailwindcss.cmd"
+    },
+    {
+        "id":  "project-986727326",
+        "name":  "Project: terser",
+        "packageName":  "project:terser",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/terser.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\terser.cmd"
+    },
+    {
+        "id":  "project-1759087340",
+        "name":  "Project: ts-node-cwd",
+        "packageName":  "project:ts-node-cwd",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-node-cwd.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-node-cwd.cmd"
+    },
+    {
+        "id":  "project-1790698205",
+        "name":  "Project: ts-node-esm",
+        "packageName":  "project:ts-node-esm",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-node-esm.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-node-esm.cmd"
+    },
+    {
+        "id":  "project-1422540797",
+        "name":  "Project: ts-node-script",
+        "packageName":  "project:ts-node-script",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-node-script.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-node-script.cmd"
+    },
+    {
+        "id":  "project-755906743",
+        "name":  "Project: ts-node-transpile-only",
+        "packageName":  "project:ts-node-transpile-only",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-node-transpile-only.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-node-transpile-only.cmd"
+    },
+    {
+        "id":  "project-800121957",
+        "name":  "Project: ts-node",
+        "packageName":  "project:ts-node",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-node.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-node.cmd"
+    },
+    {
+        "id":  "project-1281357192",
+        "name":  "Project: ts-script",
+        "packageName":  "project:ts-script",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/ts-script.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\ts-script.cmd"
+    },
+    {
+        "id":  "project-1947267613",
+        "name":  "Project: tsc",
+        "packageName":  "project:tsc",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/tsc.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\tsc.cmd"
+    },
+    {
+        "id":  "project-2082121565",
+        "name":  "Project: tsserver",
+        "packageName":  "project:tsserver",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/tsserver.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\tsserver.cmd"
+    },
+    {
+        "id":  "project-1687740039",
+        "name":  "Project: update-browserslist-db",
+        "packageName":  "project:update-browserslist-db",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/update-browserslist-db.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\update-browserslist-db.cmd"
+    },
+    {
+        "id":  "project-627454154",
+        "name":  "Project: uuid",
+        "packageName":  "project:uuid",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/uuid.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\uuid.cmd"
+    },
+    {
+        "id":  "project-378256822",
+        "name":  "Project: yaml",
+        "packageName":  "project:yaml",
+        "launchUri":  "file:///D:/Agent/guan/node_modules/.bin/yaml.cmd",
+        "executablePath":  "D:\\Agent\\guan\\node_modules\\.bin\\yaml.cmd"
+    },
+    {
+        "launchUri":  "vscode://",
+        "packageName":  "desktop:vscode",
+        "name":  "VS Code",
+        "id":  "desktop-vscode"
+    }
+]

@@ -39,6 +39,10 @@ build/Release
 
 # Dependency directories
 node_modules/
+.expo/
+.npm-cache/
+desktop/renderer-dist/
+desktop/dist/
 jspm_packages/
 
 # Snowpack dependency directory (https://snowpack.dev/)

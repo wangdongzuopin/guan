@@ -1,0 +1,32 @@
+{
+  apiType: "stageMode",
+  buildOption: {
+    strictMode: {
+      useNormalizedOHMUrl: true
+    }
+  },
+  app: {
+    signingConfigs: [],
+    products: [
+      {
+        name: "default",
+        signingConfig: "default",
+        compatibleSdkVersion: "5.0.0(12)",
+        runtimeOS: "HarmonyOS",
+        buildOption: {}
+      }
+    ],
+    modules: [
+      {
+        name: "entry",
+        srcPath: "./app/entry",
+        targets: [
+          {
+            name: "default",
+            applyToProducts: ["default"]
+          }
+        ]
+      }
+    ]
+  }
+}

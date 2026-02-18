@@ -1,0 +1,16 @@
+{
+  "string": [
+    {
+      "name": "app_name",
+      "value": "AppCollection"
+    },
+    {
+      "name": "module_desc",
+      "value": "entry module"
+    },
+    {
+      "name": "entryability_desc",
+      "value": "entry ability"
+    }
+  ]
+}

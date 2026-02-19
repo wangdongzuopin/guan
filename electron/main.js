@@ -45,7 +45,38 @@ function resolveShortcutTarget(shortcutPath) {
   }
 }
 
-function scanDesktopApps(event) {
+async function resolveShortcutIconDataUrl(shortcutPath, targetPath) {
+  const candidates = [];
+  try {
+    const shortcut = shell.readShortcutLink(shortcutPath);
+    if (shortcut?.icon && fs.existsSync(shortcut.icon)) {
+      candidates.push(shortcut.icon);
+    }
+  } catch {
+    // Ignore shortcut metadata read errors.
+  }
+
+  if (fs.existsSync(shortcutPath)) {
+    candidates.push(shortcutPath);
+  }
+  if (targetPath && fs.existsSync(targetPath)) {
+    candidates.push(targetPath);
+  }
+
+  for (const candidate of candidates) {
+    try {
+      const icon = await app.getFileIcon(candidate, { size: "small" });
+      if (icon && !icon.isEmpty()) {
+        return icon.toDataURL();
+      }
+    } catch {
+      // Try next candidate.
+    }
+  }
+  return undefined;
+}
+
+async function scanDesktopApps(event) {
   const result = [];
   const seenTarget = new Set();
   const startMenus = [
@@ -80,6 +111,7 @@ function scanDesktopApps(event) {
       seenTarget.add(normalizedTarget);
       found += 1;
       const name = path.basename(link, ".lnk");
+      const iconDataUrl = await resolveShortcutIconDataUrl(link, target);
       const uniqueKey = crypto
         .createHash("sha1")
         .update(`${link}|${target}`)
@@ -89,7 +121,8 @@ function scanDesktopApps(event) {
         id: `desktop-${uniqueKey}`,
         name,
         packageName: `desktop:${path.basename(target).toLowerCase()}`,
-        executablePath: target
+        executablePath: target,
+        iconDataUrl
       });
     }
     event.sender.send("desktop:scan-progress", {

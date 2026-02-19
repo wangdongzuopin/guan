@@ -6,6 +6,7 @@ export type InstalledApp = {
   packageName: string;
   launchUri?: string;
   executablePath?: string;
+  iconDataUrl?: string;
 };
 
 export type ScanProgress = {

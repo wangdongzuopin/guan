@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { InstalledApp } from "../types";
 
 type Props = {
@@ -73,11 +73,19 @@ export function AppItem({
               selected ? "bg-white/20" : "bg-gradient-to-br from-brand-50 to-brand-100"
             }`}
           >
-            <Ionicons 
-              name={pickIcon(app)} 
-              size={26} 
-              color={selected ? "#ffffff" : "#0c9df0"} 
-            />
+            {app.iconDataUrl ? (
+              <Image
+                source={{ uri: app.iconDataUrl }}
+                style={{ width: 30, height: 30, borderRadius: 6 }}
+                resizeMode="contain"
+              />
+            ) : (
+              <Ionicons
+                name={pickIcon(app)}
+                size={26}
+                color={selected ? "#ffffff" : "#0c9df0"}
+              />
+            )}
           </View>
 
           <Text

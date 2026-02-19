@@ -2,6 +2,7 @@ import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Speech from "expo-speech";
 import { useEffect, useMemo, useState } from "react";
+import "./global.css";
 import {
   Alert,
   Platform,

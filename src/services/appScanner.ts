@@ -3,7 +3,7 @@ import { Linking, Platform } from "react-native";
 import { InstalledApp, ScanProgress } from "../types";
 import desktopApps from "../cache/desktopApps.generated.json";
 
-const CACHE_VERSION = "v2";
+const CACHE_VERSION = "v3";
 const CACHE_PREFIX = "app_collection_scan_cache";
 
 const fallbackMobileApps: InstalledApp[] = [
@@ -82,7 +82,8 @@ function normalizeDesktopApps(raw: any[]): InstalledApp[] {
         name: item?.name || item?.packageName || "Desktop App",
         packageName: item?.packageName || `desktop:${index}`,
         launchUri,
-        executablePath: executablePath || undefined
+        executablePath: executablePath || undefined,
+        iconDataUrl: typeof item?.iconDataUrl === "string" ? item.iconDataUrl : undefined
       };
     })
     .filter((item) => !!item.name);

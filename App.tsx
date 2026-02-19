@@ -16,7 +16,7 @@ import {
   View,
   useWindowDimensions
 } from "react-native";
-import { SafeAreaProvider } from "react-native-safe-area-context";
+import { SafeAreaProvider, useSafeAreaInsets } from "react-native-safe-area-context";
 import { AppItem } from "./src/components/AppItem";
 import { ModeSwitcher } from "./src/components/ModeSwitcher";
 import { NewsPanel } from "./src/components/NewsPanel";
@@ -43,7 +43,8 @@ function resolveColumns(width: number): number {
   if (width >= 1200) return 6;
   if (width >= 1000) return 5;
   if (width >= 800) return 4;
-  return 3;
+  if (width >= 600) return 3;
+  return 2;
 }
 
 function detectGroup(app: InstalledApp): GroupKey {
@@ -105,9 +106,12 @@ const NAV_ITEMS: Array<{ key: GroupKey | "all"; label: string; icon: keyof typeo
   { key: "other", label: "\u5176\u4ed6", icon: "albums-outline" }
 ];
 
-export default function App() {
+function AppContent() {
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const isElectronRuntime = Platform.OS === "web" && typeof window !== "undefined" && !!window.electronAPI;
+  const isMobile = width < 768;
+
   const [mode, setMode] = useState<AccessibilityMode>("normal");
   const [apps, setApps] = useState<InstalledApp[]>([]);
   const [orderedIds, setOrderedIds] = useState<string[]>([]);
@@ -120,7 +124,7 @@ export default function App() {
   const [groupEditor, setGroupEditor] = useState(false);
   const [selectedAppId, setSelectedAppId] = useState<string | null>(null);
   const [navCollapsed, setNavCollapsed] = useState(false);
-  const [newsVisible, setNewsVisible] = useState(!isElectronRuntime);
+  const [newsVisible, setNewsVisible] = useState(!isMobile && !isElectronRuntime);
   const [newsCategory, setNewsCategory] = useState<NewsCategory>(DEFAULT_CATEGORY);
   const [newsList, setNewsList] = useState<NewsItem[]>([]);
   const [newsLoading, setNewsLoading] = useState(false);
@@ -141,9 +145,14 @@ export default function App() {
   const fontScale = useMemo(() => (mode === "elderly" ? 1.35 : 1), [mode]);
   const cardScale = useMemo(() => (mode === "elderly" ? 1.2 : 1), [mode]);
   const isDesktopLayout = width >= 1024;
-  const navWidth = isDesktopLayout ? (navCollapsed ? 90 : 240) : 0;
-  const rightWidth = isDesktopLayout && newsVisible ? 380 : 0;
-  const mainPanelWidth = Math.max(width - navWidth - rightWidth - 64, 300);
+
+  const navWidth = !isMobile && isDesktopLayout ? (navCollapsed ? 90 : 240) : 0;
+  const rightWidth = !isMobile && isDesktopLayout && newsVisible ? 380 : 0;
+  // Dynamic width calculation
+  const mainPanelWidth = isMobile
+    ? width - 32
+    : Math.max(width - navWidth - rightWidth - 64, 300);
+
   const gridColumns = resolveColumns(mainPanelWidth);
   const itemWidth = Math.floor((mainPanelWidth - (gridColumns - 1) * 20) / gridColumns);
   const webDragEnabled = false;
@@ -280,8 +289,10 @@ export default function App() {
   };
 
   useEffect(() => {
-    void loadNews(newsCategory);
-  }, [newsCategory]);
+    if (newsVisible) {
+      void loadNews(newsCategory);
+    }
+  }, [newsCategory, newsVisible]);
 
   const openNewsDetail = async (item: NewsItem) => {
     const link = (item.url || "").trim();
@@ -358,12 +369,6 @@ export default function App() {
     setDragOverId(null);
   };
 
-  const resetOrder = () => {
-    const natural = apps.map((app) => app.id);
-    setOrderedIds(natural);
-    void AsyncStorage.setItem(APP_ORDER_STORAGE_KEY, JSON.stringify(natural));
-  };
-
   const setAppGroup = (appId: string, group: GroupKey) => {
     setGroupOverrides((old) => {
       const next = { ...old, [appId]: group };
@@ -399,401 +404,414 @@ export default function App() {
     return () => clearTimeout(timer);
   }, [isElectronRuntime, scanLoading, newsLoading]);
 
-  useEffect(() => {
-    if (!isElectronRuntime || !window.electronAPI?.setSplashProgress) return;
-    const percent = scanLoading ? Math.max(10, Math.min(96, Math.round(scanProgress.percent))) : 100;
-    const stage = scanLoading ? "Scanning" : newsLoading ? "News" : "Ready";
-    const message = scanLoading
-      ? (scanProgress.message || "Scanning installed applications...")
-      : newsLoading
-        ? "Loading hot news..."
-        : "Workspace ready.";
-
-    void window.electronAPI.setSplashProgress({
-      percent,
-      stage,
-      message
-    });
-  }, [isElectronRuntime, scanLoading, newsLoading, scanProgress.percent, scanProgress.message]);
-
   return (
-    <SafeAreaProvider>
-      <View className="flex-1 mesh-bg">
-        <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
-        {bootLoading && (
-          <View className="absolute inset-0 z-[80] items-center justify-center bg-slate-950/35 backdrop-blur-sm">
-            <View className="w-[320px] rounded-3xl bg-white/95 border border-brand-100 p-6 shadow-2xl">
-              <View className="flex-row items-center">
-                <View className="h-10 w-10 rounded-2xl bg-brand-600 items-center justify-center mr-3">
-                  <Ionicons name="sparkles" size={20} color="#ffffff" />
-                </View>
-                <View>
-                  <Text className="text-base font-bold text-slate-800">Loading Resources</Text>
-                  <Text className="text-xs text-slate-500 mt-0.5">Preparing Electron workspace...</Text>
-                </View>
+    <View className="flex-1 mesh-bg" style={{ paddingTop: insets.top }}>
+      <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
+      {bootLoading && (
+        <View className="absolute inset-0 z-[80] items-center justify-center bg-slate-950/35 backdrop-blur-sm">
+          <View className="w-[320px] rounded-3xl bg-white/95 border border-brand-100 p-6 shadow-2xl">
+            <View className="flex-row items-center">
+              <View className="h-10 w-10 rounded-2xl bg-brand-600 items-center justify-center mr-3">
+                <Ionicons name="sparkles" size={20} color="#ffffff" />
               </View>
-              <View className="mt-5">
-                <View className="h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
-                  <View
-                    className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-500 transition-all duration-300"
-                    style={{ width: `${Math.max(8, Math.round(scanProgress.percent))}%` }}
-                  />
+              <View>
+                <Text className="text-base font-bold text-slate-800">Loading Resources</Text>
+                <Text className="text-xs text-slate-500 mt-0.5">Preparing...</Text>
+              </View>
+            </View>
+            <View className="mt-5">
+              <View className="h-2.5 w-full rounded-full bg-slate-100 overflow-hidden">
+                <View
+                  className="h-full rounded-full bg-gradient-to-r from-brand-500 to-brand-500 transition-all duration-300"
+                  style={{ width: `${Math.max(8, Math.round(scanProgress.percent))}%` }}
+                />
+              </View>
+              <View className="mt-3 flex-row items-center justify-between">
+                <Text className="text-xs font-semibold text-brand-700">{Math.round(scanProgress.percent)}%</Text>
+              </View>
+            </View>
+          </View>
+        </View>
+      )}
+
+      <View className="flex-1 flex-col p-4 md:p-6 max-w-[1920px] mx-auto w-full h-full relative">
+
+        {/* Top Bar */}
+        <View className={`bg-white/75 glass-panel rounded-[2rem] p-4 md:p-5 mb-4 md:mb-7 flex-row items-center justify-between z-20 shadow-sm ${isMobile ? "mx-1" : ""}`}>
+          <View className="flex-row items-center gap-3 md:gap-4">
+            <View className={`${isMobile ? "h-10 w-10" : "h-14 w-14"} rounded-2xl bg-gradient-brand items-center justify-center shadow-lg shadow-brand-500/30 overflow-hidden`}>
+              <Image
+                source={require("./logo.jpeg")}
+                style={{ width: isMobile ? 32 : 36, height: isMobile ? 32 : 36, borderRadius: 8 }}
+                resizeMode="contain"
+              />
+            </View>
+            {!isMobile && (
+              <View>
+                <Text style={{ fontSize: 30 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
+                <Text style={{ fontSize: 15 * fontScale }} className="text-slate-500 font-semibold tracking-wide">Workspace</Text>
+              </View>
+            )}
+            {isMobile && (
+              <Text style={{ fontSize: 20 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
+            )}
+          </View>
+
+          <View className={`hidden md:flex flex-1 max-w-xl mx-8`}>
+            <View className="flex-row items-center bg-slate-100/80 rounded-2xl border border-slate-200 px-4 py-2.5 focus-within:bg-white focus-within:border-brand-500 focus-within:shadow-md transition-all">
+              <Ionicons name="search" size={20} color="#94a3b8" />
+              <TextInput
+                className="flex-1 ml-3 text-base text-slate-700 outline-none"
+                placeholder="搜索应用..."
+                placeholderTextColor="#94a3b8"
+                value={query}
+                onChangeText={setQuery}
+                style={{ outlineStyle: 'none' }}
+              />
+              {query.length > 0 && (
+                <Pressable onPress={() => setQuery('')}>
+                  <Ionicons name="close-circle" size={18} color="#cbd5e1" />
+                </Pressable>
+              )}
+            </View>
+          </View>
+
+          <View className="flex-row items-center gap-2 md:gap-3">
+            {isMobile && (
+              <Pressable
+                onPress={() => Alert.alert("Search", "Search feature coming soon")}
+                className="h-10 w-10 items-center justify-center rounded-full bg-slate-100"
+              >
+                <Ionicons name="search" size={20} color="#64748b" />
+              </Pressable>
+            )}
+            <Pressable
+              onPress={() => setNewsVisible(v => !v)}
+              className={`${isMobile ? "h-10 w-10" : "h-12 w-12"} rounded-xl items-center justify-center transition-all ${newsVisible ? 'bg-brand-50 text-brand-600 border border-brand-200 shadow-sm' : 'bg-transparent text-slate-500 hover:bg-slate-100'
+                }`}
+            >
+              <Ionicons name={newsVisible ? "newspaper" : "newspaper-outline"} size={isMobile ? 20 : 22} color={newsVisible ? "#58abed" : "#64748b"} />
+            </Pressable>
+
+            {!isMobile && <View className="h-6 w-[1px] bg-slate-200" />}
+
+            <ModeSwitcher mode={mode} onChange={setMode} />
+          </View>
+        </View>
+
+        {/* Main Layout */}
+        <View className="flex-1 flex-row gap-6 overflow-hidden relative">
+
+          {/* Sidebar (Desktop Only) */}
+          {!isMobile && isDesktopLayout && (
+            <View className={`transition-all duration-500 ease-in-out ${navCollapsed ? 'w-[100px]' : 'w-[280px]'}`}>
+              <View className="h-full glass-panel rounded-[2rem] flex-col p-5 relative border border-white/60 shadow-xl shadow-indigo-500/5">
+                <View className={`flex-row items-center mb-8 px-2 ${navCollapsed ? 'justify-center' : 'justify-between'}`}>
+                  {!navCollapsed && (
+                    <View className="flex-row items-center">
+                      <View className="h-9 w-9 rounded-xl bg-brand-100 items-center justify-center mr-3 border border-brand-200">
+                        <Ionicons name="layers" size={20} color="#58abed" />
+                      </View>
+                      <Text className="text-lg font-bold text-slate-800 tracking-tight">分类导航</Text>
+                    </View>
+                  )}
+                  <Pressable
+                    onPress={toggleNavCollapsed}
+                    className={`rounded-xl p-2.5 hover:bg-slate-100 active:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors ${navCollapsed ? '' : 'bg-transparent'}`}
+                  >
+                    <Ionicons name={navCollapsed ? "menu" : "chevron-back"} size={20} color="#64748b" />
+                  </Pressable>
                 </View>
-                <View className="mt-3 flex-row items-center justify-between">
-                  <Text className="text-xs font-semibold text-brand-700">{Math.round(scanProgress.percent)}%</Text>
-                  <View className="flex-row items-center">
-                    <View className="h-2 w-2 rounded-full bg-brand-400 animate-pulse mr-1.5" />
-                    <View className="h-2 w-2 rounded-full bg-brand-500 animate-pulse mr-1.5" />
-                    <View className="h-2 w-2 rounded-full bg-brand-600 animate-pulse" />
-                  </View>
+
+                <View className="space-y-3">
+                  {NAV_ITEMS.map((item) => {
+                    const isActive = activeGroup === item.key;
+                    return (
+                      <Pressable
+                        key={item.key}
+                        onPress={() => setActiveGroup(item.key)}
+                        className={`group flex-row items-center px-4 py-3.5 rounded-2xl transition-all duration-300 ${isActive
+                          ? 'bg-brand-600 shadow-lg shadow-brand-500/30 translate-x-1'
+                          : 'hover:bg-white/60 hover:shadow-sm hover:translate-x-1 bg-transparent'
+                          }`}
+                      >
+                        <View className={`items-center justify-center w-6`}>
+                          <Ionicons
+                            name={isActive ? item.icon.replace('-outline', '') as any : item.icon}
+                            size={22}
+                            color={isActive ? "white" : "#64748b"}
+                          />
+                        </View>
+
+                        {!navCollapsed && (
+                          <>
+                            <Text className={`ml-3.5 font-bold text-[15px] flex-1 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-800'}`}>
+                              {item.label}
+                            </Text>
+                            <View className={`px-2.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-slate-100 group-hover:bg-white'}`}>
+                              <Text className={`text-xs font-bold ${isActive ? 'text-white' : 'text-slate-500'}`}>
+                                {groupCounts[item.key as keyof typeof groupCounts]}
+                              </Text>
+                            </View>
+                          </>
+                        )}
+                      </Pressable>
+                    );
+                  })}
+                </View>
+
+                <View className="mt-auto space-y-3 pt-6 border-t border-slate-100/60 w-full">
+                  <Pressable
+                    onPress={() => setGroupEditor(v => !v)}
+                    className={`flex-row items-center px-4 py-3.5 rounded-2xl transition-all duration-300 w-full ${groupEditor
+                      ? 'bg-brand-50 border border-brand-100 shadow-sm'
+                      : 'hover:bg-white/60 border border-transparent'
+                      }`}
+                  >
+                    <View className={`items-center justify-center w-6`}>
+                      <Ionicons
+                        name={groupEditor ? "folder-open" : "folder-open-outline"}
+                        size={22}
+                        color={groupEditor ? "#58abed" : "#64748b"}
+                      />
+                    </View>
+                    {!navCollapsed && (
+                      <View className="ml-3.5 flex-1">
+                        <Text className={`font-bold text-[14px] ${groupEditor ? "text-brand-700" : "text-slate-600"}`}>
+                          分组管理
+                        </Text>
+                        <Text className="text-[10px] text-slate-400 mt-0.5">Custom Groups</Text>
+                      </View>
+                    )}
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => void loadInstalledApps(true)}
+                    className="flex-row items-center px-4 py-3.5 rounded-2xl hover:bg-white/60 transition-all duration-300 w-full"
+                  >
+                    <View className={`items-center justify-center w-6 ${scanLoading ? "animate-spin-slow" : ""}`}>
+                      <Ionicons name="scan-outline" size={22} color="#64748b" />
+                    </View>
+                    {!navCollapsed && (
+                      <View className="ml-3.5 flex-1">
+                        <Text className="font-bold text-[14px] text-slate-600">重新扫描</Text>
+                        <Text className="text-[10px] text-slate-400 mt-0.5">
+                          {scanLoading ? `Scanning ${Math.round(scanProgress.percent)}%` : "Refresh Apps"}
+                        </Text>
+                      </View>
+                    )}
+                  </Pressable>
                 </View>
               </View>
             </View>
+          )}
+
+          {/* Grid Area */}
+          <View className={`flex-1 flex-col overflow-hidden ${isMobile && newsVisible ? 'hidden' : ''}`}>
+            {/* Scan Progress */}
+            {scanLoading && (
+              <View className="mb-4 bg-white/40 h-1 w-full rounded-full overflow-hidden">
+                <View
+                  className="h-full bg-gradient-to-r from-brand-400 to-brand-500 transition-all duration-300"
+                  style={{ width: `${scanProgress.percent}%` }}
+                />
+              </View>
+            )}
+
+            {/* Group Editor Overlay */}
+            {groupEditor && selectedApp && (
+              <View className="mb-6 mx-1 glass p-6 rounded-3xl border border-white/60 shadow-xl shadow-indigo-500/5 relative overflow-hidden">
+                <View className="absolute top-0 right-0 p-4 opacity-10">
+                  <Ionicons name="folder-open" size={120} color="#58abed" />
+                </View>
+                <View className="flex-row items-center justify-between mb-6">
+                  <View>
+                    <Text className="text-xl font-bold text-slate-800">编辑分组</Text>
+                    <Text className="text-slate-500 mt-1">为 <Text className="font-bold text-brand-600">{selectedApp.name}</Text> 选择一个合适的分类</Text>
+                  </View>
+                  <Pressable onPress={() => setSelectedAppId(null)} className="p-2 hover:bg-black/5 rounded-full">
+                    <Ionicons name="close" size={24} color="#64748b" />
+                  </Pressable>
+                </View>
+                <View className="flex-row flex-wrap gap-3">
+                  {GROUP_KEYS.map((key) => {
+                    const isActive = resolveGroup(selectedApp) === key;
+                    return (
+                      <Pressable
+                        key={key}
+                        onPress={() => setAppGroup(selectedApp.id, key)}
+                        className={`px-6 py-3 rounded-xl border transition-all ${isActive
+                          ? 'bg-brand-600 border-brand-600 shadow-lg shadow-brand-500/30'
+                          : 'bg-white border-slate-200 text-slate-600 hover:border-brand-300'
+                          }`}
+                      >
+                        <Text className={`font-semibold ${isActive ? 'text-white' : 'text-slate-600'}`}>
+                          {GROUP_LABEL[key]}
+                        </Text>
+                      </Pressable>
+                    );
+                  })}
+                </View>
+              </View>
+            )}
+
+            {/* Main App Grid Container with Glass Panel */}
+            <View className="flex-1 glass-panel rounded-[2rem] border border-white/60 overflow-hidden relative">
+              {scanLoading && (
+                <View className="absolute top-4 right-5 z-20 rounded-2xl bg-white/90 border border-brand-100 px-4 py-3 shadow-lg">
+                  <View className="flex-row items-center">
+                    <View className="h-5 w-5 rounded-full border-2 border-brand-200 border-t-brand-600 animate-spin mr-2" />
+                    <Text className="text-xs font-bold text-brand-700">
+                      Loading {Math.round(scanProgress.percent)}%
+                    </Text>
+                  </View>
+                  <View className="mt-2 flex-row items-center">
+                    <View className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse mr-1.5" />
+                    <View className="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse mr-1.5" />
+                    <View className="h-1.5 w-1.5 rounded-full bg-brand-600 animate-pulse" />
+                  </View>
+                </View>
+              )}
+              <ScrollView
+                showsVerticalScrollIndicator={false}
+                className="flex-1 px-4 md:px-6 pt-6"
+                contentContainerStyle={{ paddingBottom: 100 }}
+              >
+                {pinnedApps.length > 0 && (
+                  <View className="mb-8 rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50/80 to-white p-4">
+                    <View className="flex-row items-center mb-4 pl-1 border-b border-amber-100 pb-2">
+                      <View className="h-6 w-1 rounded-full bg-amber-500 mr-3" />
+                      <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">置顶应用</Text>
+                      <View className="bg-amber-50 px-2.5 py-0.5 rounded-full">
+                        <Text className="text-xs font-bold text-amber-600">{pinnedApps.length}</Text>
+                      </View>
+                    </View>
+                    <View className="flex-row flex-wrap gap-4">
+                      {pinnedApps.map((app) => (
+                        <AppItem
+                          key={app.id}
+                          app={app}
+                          fontScale={fontScale}
+                          cardScale={cardScale}
+                          itemWidth={itemWidth - (isMobile ? 0 : 24)}
+                          groupLabel={GROUP_LABEL[resolveGroup(app)]}
+                          selected={selectedAppId === app.id}
+                          pinned
+                          dragEnabled={false}
+                          onTogglePinned={togglePinned}
+                          onPress={onAppPress}
+                          onLongPress={(target) => setSelectedAppId(target.id)}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                )}
+
+                {visibleGroups.map((group) => (
+                  <View key={group} className="mb-8 rounded-3xl border border-slate-100 bg-white/80 p-4">
+                    <View className="flex-row items-center mb-4 pl-1 border-b border-slate-100 pb-2">
+                      <View className="h-6 w-1 rounded-full bg-brand-500 mr-3" />
+                      <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">
+                        {GROUP_LABEL[group]}
+                      </Text>
+                      <View className="bg-slate-100 px-2.5 py-0.5 rounded-full">
+                        <Text className="text-xs font-bold text-slate-500">{groupedApps[group].length}</Text>
+                      </View>
+                    </View>
+
+                    <View className="flex-row flex-wrap gap-4">
+                      {groupedApps[group].map((app) => (
+                        <AppItem
+                          key={app.id}
+                          app={app}
+                          fontScale={fontScale}
+                          cardScale={cardScale}
+                          itemWidth={itemWidth - (isMobile ? 0 : 24)} // Adjusted for padding
+                          groupLabel={GROUP_LABEL[resolveGroup(app)]}
+                          selected={selectedAppId === app.id}
+                          pinned={pinnedSet.has(app.id)}
+                          dragEnabled={false}
+                          dragHint={
+                            webDragEnabled
+                              ? dragOverId === app.id
+                                ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
+                                : "\u62d6\u62fd\u6392\u5e8f"
+                              : "\u6392\u5e8f"
+                          }
+                          onTogglePinned={togglePinned}
+                          webDragProps={undefined}
+                          onPress={onAppPress}
+                          onLongPress={(target) => setSelectedAppId(target.id)}
+                        />
+                      ))}
+                    </View>
+                  </View>
+                ))}
+
+                {visibleGroups.length === 0 && (
+                  <View className="flex-1 items-center justify-center min-h-[400px]">
+                    <View className="h-24 w-24 rounded-full bg-slate-50 items-center justify-center mb-4">
+                      <Ionicons name="search" size={40} color="#cbd5e1" />
+                    </View>
+                    <Text className="text-slate-400 font-medium text-lg">未找到匹配的应用</Text>
+                  </View>
+                )}
+              </ScrollView>
+            </View>
+          </View>
+
+          {/* News Panel */}
+          {newsVisible && (
+            <View className={`${isMobile ? "absolute inset-0 z-40 bg-slate-50" : isDesktopLayout ? "w-[380px]" : "w-full"} animate-fade-in`}>
+              <NewsPanel
+                current={newsCategory}
+                data={newsList}
+                loading={newsLoading}
+                error={newsError}
+                fontScale={fontScale}
+                onChangeCategory={setNewsCategory}
+                onRefresh={() => void loadNews(newsCategory)}
+                onOpenDetail={(item) => void openNewsDetail(item)}
+              />
+            </View>
+          )}
+
+        </View>
+
+        {/* Mobile Bottom Navigation - Only show when News is NOT visible (or maybe News is a modal) */}
+        {isMobile && !newsVisible && (
+          <View className="absolute bottom-6 left-4 right-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/50 flex-row justify-around p-2 z-50">
+            {NAV_ITEMS.map((item) => {
+              const isActive = activeGroup === item.key;
+              return (
+                <Pressable
+                  key={item.key}
+                  onPress={() => {
+                    setActiveGroup(item.key);
+                    setNewsVisible(false);
+                  }}
+                  className={`items-center justify-center p-2 rounded-xl transition-all ${isActive ? "bg-brand-50" : "bg-transparent"}`}
+                >
+                  <Ionicons
+                    name={isActive ? item.icon.replace('-outline', '') as any : item.icon}
+                    size={24}
+                    color={isActive ? "#58abed" : "#94a3b8"}
+                  />
+                </Pressable>
+              )
+            })}
           </View>
         )}
 
-        <View className="flex-1 flex-col p-4 md:p-6 max-w-[1920px] mx-auto w-full h-full">
-
-          {/* Top Bar */}
-          <View className="bg-white/75 glass-panel rounded-[2rem] p-5 mb-7 flex-row items-center justify-between z-20">
-            <View className="flex-row items-center gap-4">
-              <View className="h-14 w-14 rounded-2xl bg-gradient-brand items-center justify-center shadow-lg shadow-brand-500/30">
-                <Image
-                  source={require("./logo.jpeg")}
-                  style={{ width: 36, height: 36, borderRadius: 8 }}
-                  resizeMode="contain"
-                />
-              </View>
-              <View>
-                <Text style={{ fontSize: 30 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
-                <Text style={{ fontSize: 15 * fontScale }} className="text-slate-500 font-semibold tracking-wide">Electron Workspace</Text>
-              </View>
-            </View>
-
-            <View className="hidden md:flex flex-1 max-w-xl mx-8">
-              <View className="flex-row items-center bg-slate-100/80 rounded-2xl border border-slate-200 px-4 py-2.5 focus-within:bg-white focus-within:border-brand-500 focus-within:shadow-md transition-all">
-                <Ionicons name="search" size={20} color="#94a3b8" />
-                <TextInput
-                  className="flex-1 ml-3 text-base text-slate-700 outline-none"
-                  placeholder="搜索应用..."
-                  placeholderTextColor="#94a3b8"
-                  value={query}
-                  onChangeText={setQuery}
-                  style={{ outlineStyle: 'none' }}
-                />
-                {query.length > 0 && (
-                  <Pressable onPress={() => setQuery('')}>
-                    <Ionicons name="close-circle" size={18} color="#cbd5e1" />
-                  </Pressable>
-                )}
-              </View>
-            </View>
-
-            <View className="flex-row items-center gap-3">
-              <Pressable
-                onPress={() => setNewsVisible(v => !v)}
-                className={`h-12 w-12 rounded-xl items-center justify-center transition-all ${newsVisible ? 'bg-brand-50 text-brand-600 border border-brand-200 shadow-sm' : 'bg-transparent text-slate-500 hover:bg-slate-100'
-                  }`}
-              >
-                <Ionicons name={newsVisible ? "newspaper" : "newspaper-outline"} size={22} color={newsVisible ? "#58abed" : "#64748b"} />
-              </Pressable>
-
-              <View className="h-6 w-[1px] bg-slate-200" />
-
-              <ModeSwitcher mode={mode} onChange={setMode} />
-            </View>
-          </View>
-
-          {/* Main Layout */}
-          <View className="flex-1 flex-row gap-6 overflow-hidden">
-
-            {/* Sidebar */}
-            {isDesktopLayout && (
-              <View className={`transition-all duration-500 ease-in-out ${navCollapsed ? 'w-[100px]' : 'w-[280px]'}`}>
-                <View className="h-full glass-panel rounded-[2rem] flex-col p-5 relative border border-white/60 shadow-xl shadow-indigo-500/5">
-                  <View className={`flex-row items-center mb-8 px-2 ${navCollapsed ? 'justify-center' : 'justify-between'}`}>
-                    {!navCollapsed && (
-                      <View className="flex-row items-center">
-                        <View className="h-9 w-9 rounded-xl bg-brand-100 items-center justify-center mr-3 border border-brand-200">
-                          <Ionicons name="layers" size={20} color="#58abed" />
-                        </View>
-                        <Text className="text-lg font-bold text-slate-800 tracking-tight">分类导航</Text>
-                      </View>
-                    )}
-                    <Pressable
-                      onPress={toggleNavCollapsed}
-                      className={`rounded-xl p-2.5 hover:bg-slate-100 active:bg-slate-200 text-slate-400 hover:text-slate-600 transition-colors ${navCollapsed ? '' : 'bg-transparent'}`}
-                    >
-                      <Ionicons name={navCollapsed ? "menu" : "chevron-back"} size={20} color="#64748b" />
-                    </Pressable>
-                  </View>
-
-                  <View className="space-y-3">
-                    {NAV_ITEMS.map((item) => {
-                      const isActive = activeGroup === item.key;
-                      return (
-                        <Pressable
-                          key={item.key}
-                          onPress={() => setActiveGroup(item.key)}
-                          className={`group flex-row items-center px-4 py-3.5 rounded-2xl transition-all duration-300 ${isActive
-                              ? 'bg-brand-600 shadow-lg shadow-brand-500/30 translate-x-1'
-                              : 'hover:bg-white/60 hover:shadow-sm hover:translate-x-1 bg-transparent'
-                            }`}
-                        >
-                          <View className={`items-center justify-center w-6`}>
-                            <Ionicons
-                              name={isActive ? item.icon.replace('-outline', '') as any : item.icon}
-                              size={22}
-                              color={isActive ? "white" : "#64748b"}
-                            />
-                          </View>
-
-                          {!navCollapsed && (
-                            <>
-                              <Text className={`ml-3.5 font-bold text-[15px] flex-1 ${isActive ? 'text-white' : 'text-slate-600 group-hover:text-slate-800'}`}>
-                                {item.label}
-                              </Text>
-                              <View className={`px-2.5 py-0.5 rounded-full ${isActive ? 'bg-white/20' : 'bg-slate-100 group-hover:bg-white'}`}>
-                                <Text className={`text-xs font-bold ${isActive ? 'text-white' : 'text-slate-500'}`}>
-                                  {groupCounts[item.key as keyof typeof groupCounts]}
-                                </Text>
-                              </View>
-                            </>
-                          )}
-
-                          {/* Tooltip hint for collapsed mode */}
-                          {navCollapsed && (
-                            <View className="absolute left-full ml-4 px-3 py-1.5 bg-slate-800 rounded-lg opacity-0 group-hover:opacity-100 pointer-events-none transition-opacity z-50 whitespace-nowrap">
-                              <Text className="text-white text-xs font-bold">{item.label}</Text>
-                            </View>
-                          )}
-                        </Pressable>
-                      );
-                    })}
-                  </View>
-
-                  <View className="mt-auto space-y-3 pt-6 border-t border-slate-100/60 w-full">
-                    <Pressable
-                      onPress={() => setGroupEditor(v => !v)}
-                      className={`flex-row items-center px-4 py-3.5 rounded-2xl transition-all duration-300 w-full ${groupEditor
-                          ? 'bg-brand-50 border border-brand-100 shadow-sm'
-                          : 'hover:bg-white/60 border border-transparent'
-                        }`}
-                    >
-                      <View className={`items-center justify-center w-6`}>
-                        <Ionicons
-                          name={groupEditor ? "folder-open" : "folder-open-outline"}
-                          size={22}
-                          color={groupEditor ? "#58abed" : "#64748b"}
-                        />
-                      </View>
-                      {!navCollapsed && (
-                        <View className="ml-3.5 flex-1">
-                          <Text className={`font-bold text-[14px] ${groupEditor ? "text-brand-700" : "text-slate-600"}`}>
-                            分组管理
-                          </Text>
-                          <Text className="text-[10px] text-slate-400 mt-0.5">Custom Groups</Text>
-                        </View>
-                      )}
-                    </Pressable>
-
-                    <Pressable
-                      onPress={() => void loadInstalledApps(true)}
-                      className="flex-row items-center px-4 py-3.5 rounded-2xl hover:bg-white/60 transition-all duration-300 w-full"
-                    >
-                      <View className={`items-center justify-center w-6 ${scanLoading ? "animate-spin-slow" : ""}`}>
-                        <Ionicons name="scan-outline" size={22} color="#64748b" />
-                      </View>
-                      {!navCollapsed && (
-                        <View className="ml-3.5 flex-1">
-                          <Text className="font-bold text-[14px] text-slate-600">重新扫描</Text>
-                          <Text className="text-[10px] text-slate-400 mt-0.5">
-                            {scanLoading ? `Scanning ${Math.round(scanProgress.percent)}%` : "Refresh Apps"}
-                          </Text>
-                        </View>
-                      )}
-                    </Pressable>
-                  </View>
-                </View>
-              </View>
-            )}
-
-            {/* Grid Area */}
-            <View className="flex-1 flex-col overflow-hidden">
-              {/* Scan Progress */}
-              {scanLoading && (
-                <View className="mb-4 bg-white/40 h-1 w-full rounded-full overflow-hidden">
-                  <View
-                    className="h-full bg-gradient-to-r from-brand-400 to-brand-500 transition-all duration-300"
-                    style={{ width: `${scanProgress.percent}%` }}
-                  />
-                </View>
-              )}
-
-              {/* Group Editor Overlay */}
-              {groupEditor && selectedApp && (
-                <View className="mb-6 mx-1 glass p-6 rounded-3xl border border-white/60 shadow-xl shadow-indigo-500/5 relative overflow-hidden">
-                  <View className="absolute top-0 right-0 p-4 opacity-10">
-                    <Ionicons name="folder-open" size={120} color="#58abed" />
-                  </View>
-                  <View className="flex-row items-center justify-between mb-6">
-                    <View>
-                      <Text className="text-xl font-bold text-slate-800">编辑分组</Text>
-                      <Text className="text-slate-500 mt-1">为 <Text className="font-bold text-brand-600">{selectedApp.name}</Text> 选择一个合适的分类</Text>
-                    </View>
-                    <Pressable onPress={() => setSelectedAppId(null)} className="p-2 hover:bg-black/5 rounded-full">
-                      <Ionicons name="close" size={24} color="#64748b" />
-                    </Pressable>
-                  </View>
-                  <View className="flex-row flex-wrap gap-3">
-                    {GROUP_KEYS.map((key) => {
-                      const isActive = resolveGroup(selectedApp) === key;
-                      return (
-                        <Pressable
-                          key={key}
-                          onPress={() => setAppGroup(selectedApp.id, key)}
-                          className={`px-6 py-3 rounded-xl border transition-all ${isActive
-                            ? 'bg-brand-600 border-brand-600 shadow-lg shadow-brand-500/30'
-                            : 'bg-white border-slate-200 text-slate-600 hover:border-brand-300'
-                            }`}
-                        >
-                          <Text className={`font-semibold ${isActive ? 'text-white' : 'text-slate-600'}`}>
-                            {GROUP_LABEL[key]}
-                          </Text>
-                        </Pressable>
-                      );
-                    })}
-                  </View>
-                </View>
-              )}
-
-              {/* Main App Grid Container with Glass Panel */}
-              <View className="flex-1 glass-panel rounded-[2rem] border border-white/60 overflow-hidden relative">
-                {scanLoading && (
-                  <View className="absolute top-4 right-5 z-20 rounded-2xl bg-white/90 border border-brand-100 px-4 py-3 shadow-lg">
-                    <View className="flex-row items-center">
-                      <View className="h-5 w-5 rounded-full border-2 border-brand-200 border-t-brand-600 animate-spin mr-2" />
-                      <Text className="text-xs font-bold text-brand-700">
-                        Loading {Math.round(scanProgress.percent)}%
-                      </Text>
-                    </View>
-                    <View className="mt-2 flex-row items-center">
-                      <View className="h-1.5 w-1.5 rounded-full bg-brand-400 animate-pulse mr-1.5" />
-                      <View className="h-1.5 w-1.5 rounded-full bg-brand-500 animate-pulse mr-1.5" />
-                      <View className="h-1.5 w-1.5 rounded-full bg-brand-600 animate-pulse" />
-                    </View>
-                  </View>
-                )}
-                <ScrollView
-                  showsVerticalScrollIndicator={false}
-                  className="flex-1 px-6 pt-6"
-                  contentContainerStyle={{ paddingBottom: 40 }}
-                >
-                  {pinnedApps.length > 0 && (
-                    <View className="mb-8">
-                      <View className="flex-row items-center mb-4 pl-1 border-b border-amber-100 pb-2">
-                        <View className="h-6 w-1 rounded-full bg-amber-500 mr-3" />
-                        <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">置顶应用</Text>
-                        <View className="bg-amber-50 px-2.5 py-0.5 rounded-full">
-                          <Text className="text-xs font-bold text-amber-600">{pinnedApps.length}</Text>
-                        </View>
-                      </View>
-                      <View className="flex-row flex-wrap gap-4">
-                        {pinnedApps.map((app) => (
-                          <AppItem
-                            key={app.id}
-                            app={app}
-                            fontScale={fontScale}
-                            cardScale={cardScale}
-                            itemWidth={itemWidth - 24}
-                            groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                            selected={selectedAppId === app.id}
-                            pinned
-                            dragEnabled={false}
-                            onTogglePinned={togglePinned}
-                            onPress={onAppPress}
-                            onLongPress={(target) => setSelectedAppId(target.id)}
-                          />
-                        ))}
-                      </View>
-                    </View>
-                  )}
-
-                  {visibleGroups.map((group) => (
-                    <View key={group} className="mb-8">
-                      <View className="flex-row items-center mb-4 pl-1 border-b border-slate-100 pb-2">
-                        <View className="h-6 w-1 rounded-full bg-brand-500 mr-3" />
-                        <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">
-                          {GROUP_LABEL[group]}
-                        </Text>
-                        <View className="bg-slate-100 px-2.5 py-0.5 rounded-full">
-                          <Text className="text-xs font-bold text-slate-500">{groupedApps[group].length}</Text>
-                        </View>
-                      </View>
-
-                      <View className="flex-row flex-wrap gap-4">
-                        {groupedApps[group].map((app) => (
-                          <AppItem
-                            key={app.id}
-                            app={app}
-                            fontScale={fontScale}
-                            cardScale={cardScale}
-                            itemWidth={itemWidth - 24} // Adjusted for padding
-                            groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                            selected={selectedAppId === app.id}
-                            pinned={pinnedSet.has(app.id)}
-                            dragEnabled={false}
-                            dragHint={
-                              webDragEnabled
-                                ? dragOverId === app.id
-                                  ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
-                                  : "\u62d6\u62fd\u6392\u5e8f"
-                                : "\u6392\u5e8f"
-                            }
-                            onTogglePinned={togglePinned}
-                            webDragProps={undefined}
-                            onPress={onAppPress}
-                            onLongPress={(target) => setSelectedAppId(target.id)}
-                          />
-                        ))}
-                      </View>
-                    </View>
-                  ))}
-
-                  {visibleGroups.length === 0 && (
-                    <View className="flex-1 items-center justify-center min-h-[400px]">
-                      <View className="h-24 w-24 rounded-full bg-slate-50 items-center justify-center mb-4">
-                        <Ionicons name="search" size={40} color="#cbd5e1" />
-                      </View>
-                      <Text className="text-slate-400 font-medium text-lg">未找到匹配的应用</Text>
-                    </View>
-                  )}
-                </ScrollView>
-              </View>
-            </View>
-
-            {/* News Panel */}
-            {newsVisible && (
-              <View className={`${isDesktopLayout ? "w-[380px]" : "w-full"} animate-fade-in`}>
-                <NewsPanel
-                  current={newsCategory}
-                  data={newsList}
-                  loading={newsLoading}
-                  error={newsError}
-                  fontScale={fontScale}
-                  onChangeCategory={setNewsCategory}
-                  onRefresh={() => void loadNews(newsCategory)}
-                  onOpenDetail={(item) => void openNewsDetail(item)}
-                />
-              </View>
-            )}
-
-          </View>
-        </View>
       </View>
-    </SafeAreaProvider>
+    </View>
   );
 }
 
-
-
+export default function App() {
+  return (
+    <SafeAreaProvider>
+      <AppContent />
+    </SafeAreaProvider>
+  );
+}

@@ -8,6 +8,7 @@ type Props = {
   loading: boolean;
   error: string | null;
   fontScale: number;
+  isMobile?: boolean;
   onChangeCategory: (category: NewsCategory) => void;
   onRefresh: () => void;
   onOpenDetail: (item: NewsItem) => void;
@@ -25,55 +26,49 @@ export function NewsPanel({
   loading,
   error,
   fontScale,
+  isMobile = false,
   onChangeCategory,
   onRefresh,
   onOpenDetail
 }: Props) {
   return (
-    <View className="rounded-[1.75rem] glass-panel h-full flex-col overflow-hidden border border-white/60 shadow-lg shadow-indigo-500/5">
-      <View className="px-6 py-5 border-b border-slate-100/50 flex-row items-center justify-between bg-white/40">
+    <View className={`${isMobile ? "rounded-none" : "rounded-2xl"} h-full overflow-hidden border border-slate-200 bg-slate-50`}>
+      <View className="flex-row items-center justify-between border-b border-slate-200 bg-white px-4 py-3.5">
         <View className="flex-row items-center">
-          <View className="h-10 w-10 rounded-xl bg-brand-100 items-center justify-center mr-3 text-brand-600">
-            <Ionicons name="newspaper" size={20} color="#58abed" />
+          <View className="mr-2.5 h-8 w-8 items-center justify-center rounded-lg bg-blue-50">
+            <Ionicons name="newspaper-outline" size={16} color="#2563eb" />
           </View>
           <View>
-            <Text style={{ fontSize: 18 * fontScale }} className="font-bold text-slate-800 tracking-tight">
-              {"热点资讯"}
+            <Text style={{ fontSize: 16 * fontScale }} className="font-semibold text-slate-900">
+              热点资讯
             </Text>
-            <Text style={{ fontSize: 12 * fontScale }} className="text-slate-500 font-medium">
-              {"每日更新 · 实时播报"}
+            <Text style={{ fontSize: 11 * fontScale }} className="text-slate-500">
+              简洁快读
             </Text>
           </View>
         </View>
-        <Pressable
-          onPress={onRefresh}
-          className="h-9 w-9 rounded-full bg-slate-50 items-center justify-center hover:bg-slate-100 active:bg-slate-200 transition-colors"
-        >
-          <Ionicons name="refresh-outline" size={18} color="#64748b" />
+
+        <Pressable onPress={onRefresh} className="h-10 w-10 items-center justify-center rounded-xl border border-slate-200 bg-slate-50">
+          <Ionicons name="refresh-outline" size={18} color="#475569" />
         </Pressable>
       </View>
 
-      <View className="px-5 py-3 bg-white/20">
-        <View className="flex-row bg-slate-100/80 rounded-xl p-1">
+      <View className="border-b border-slate-200 bg-white px-4 py-2.5">
+        <View className="flex-row rounded-xl bg-slate-100 p-1">
           {categories.map((category) => {
             const active = current === category.key;
             return (
               <Pressable
                 key={category.key}
                 onPress={() => onChangeCategory(category.key)}
-                className={`flex-1 flex-row items-center justify-center rounded-lg py-2 transition-all duration-300 ${
-                  active ? "bg-white shadow-sm scale-100" : "bg-transparent scale-95 opacity-70 hover:opacity-100"
-                }`}
+                className={`flex-1 flex-row items-center justify-center rounded-lg py-2.5 ${active ? "bg-white" : "bg-transparent"}`}
               >
                 <Ionicons
                   name={active ? (category.icon.replace("-outline", "") as any) : category.icon}
                   size={14}
-                  color={active ? "#58abed" : "#64748b"}
+                  color={active ? "#2563eb" : "#64748b"}
                 />
-                <Text
-                  style={{ fontSize: 12 * fontScale }}
-                  className={`ml-1.5 font-bold ${active ? "text-slate-800" : "text-slate-500"}`}
-                >
+                <Text style={{ fontSize: 12 * fontScale }} className={`ml-1.5 font-medium ${active ? "text-slate-900" : "text-slate-500"}`}>
                   {category.label}
                 </Text>
               </Pressable>
@@ -82,57 +77,43 @@ export function NewsPanel({
         </View>
       </View>
 
-      <View className="flex-1 relative bg-white/30">
+      <View className="flex-1">
         {loading && (
-          <View className="absolute inset-0 z-10 items-center justify-center bg-white/50 backdrop-blur-sm">
-            <View className="h-8 w-8 rounded-full border-2 border-brand-200 border-t-brand-600 animate-spin" />
-            <Text className="mt-2 text-xs font-semibold text-brand-600">加载中...</Text>
+          <View className="absolute inset-0 z-10 items-center justify-center bg-white/70">
+            <View className="h-8 w-8 rounded-full border-2 border-slate-200 border-t-blue-600 animate-spin" />
+            <Text className="mt-2 text-xs font-medium text-slate-500">加载中...</Text>
           </View>
         )}
 
         {error ? (
-          <View className="flex-1 items-center justify-center p-6 text-center">
-            <Ionicons name="cloud-offline-outline" size={32} color="#f43f5e" />
-            <Text className="mt-2 text-sm text-slate-500 font-medium text-center">{error}</Text>
-            <Pressable onPress={onRefresh} className="mt-4 px-4 py-2 bg-slate-100 rounded-lg">
-              <Text className="text-xs font-bold text-slate-600">重试</Text>
+          <View className="flex-1 items-center justify-center px-6">
+            <Ionicons name="cloud-offline-outline" size={30} color="#ef4444" />
+            <Text className="mt-2 text-center text-sm text-slate-500">{error}</Text>
+            <Pressable onPress={onRefresh} className="mt-4 rounded-lg border border-slate-200 bg-white px-4 py-2">
+              <Text className="text-xs font-medium text-slate-600">重试</Text>
             </Pressable>
           </View>
         ) : (
-          <ScrollView className="flex-1 px-4" contentContainerStyle={{ paddingVertical: 12 }} showsVerticalScrollIndicator={false}>
+          <ScrollView className="flex-1 px-3" showsVerticalScrollIndicator={false} contentContainerStyle={{ paddingVertical: 10 }}>
             {data.map((news, index) => (
               <Pressable
                 key={news.id}
                 onPress={() => onOpenDetail(news)}
-                className={`group mb-3 rounded-2xl p-4 transition-all duration-300 border border-transparent ${
-                  index === 0
-                    ? "bg-gradient-to-br from-brand-50 to-white border-brand-100/50 hover:shadow-md"
-                    : "bg-white/60 hover:bg-white hover:shadow-sm hover:border-slate-100"
-                }`}
+                className="mb-2.5 rounded-xl border border-slate-200 bg-white px-3.5 py-3"
               >
                 <View className="flex-row items-start">
-                  <Text
-                    className={`text-[10px] font-bold px-1.5 py-0.5 rounded-md mr-2 mt-0.5 ${
-                      index < 3 ? "bg-rose-50 text-rose-500" : "bg-slate-100 text-slate-400"
-                    }`}
-                  >
-                    {index + 1}
-                  </Text>
+                  <View className={`mr-2 mt-0.5 rounded px-1.5 py-0.5 ${index < 3 ? "bg-blue-50" : "bg-slate-100"}`}>
+                    <Text className={`text-[10px] font-semibold ${index < 3 ? "text-blue-600" : "text-slate-500"}`}>{index + 1}</Text>
+                  </View>
                   <View className="flex-1">
-                    <Text
-                      style={{ fontSize: 13.5 * fontScale }}
-                      className={`font-bold leading-[1.4] ${
-                        index < 3 ? "text-slate-900" : "text-slate-700"
-                      } group-hover:text-brand-700 transition-colors`}
-                      numberOfLines={2}
-                    >
+                    <Text style={{ fontSize: 13.5 * fontScale }} className="font-medium leading-5 text-slate-900" numberOfLines={2}>
                       {news.title}
                     </Text>
-                    <View className="flex-row items-center mt-2.5">
-                      <Text style={{ fontSize: 11 * fontScale }} className="text-slate-400 font-medium">
+                    <View className="mt-2 flex-row items-center">
+                      <Text style={{ fontSize: 11 * fontScale }} className="text-slate-500">
                         {news.source}
                       </Text>
-                      <View className="h-1 w-1 rounded-full bg-slate-300 mx-2" />
+                      <View className="mx-2 h-1 w-1 rounded-full bg-slate-300" />
                       <Text style={{ fontSize: 11 * fontScale }} className="text-slate-400">
                         {news.publishedAt}
                       </Text>
@@ -147,4 +128,3 @@ export function NewsPanel({
     </View>
   );
 }
-

@@ -106,6 +106,21 @@ const NAV_ITEMS: Array<{ key: GroupKey | "all"; label: string; icon: keyof typeo
   { key: "other", label: "\u5176\u4ed6", icon: "albums-outline" }
 ];
 
+const GROUP_THEME: Record<GroupKey, { accent: string; soft: string; header: string }> = {
+  office: { accent: "#2563eb", soft: "#eff6ff", header: "#1e3a8a" },
+  development: { accent: "#0d9488", soft: "#f0fdfa", header: "#134e4a" },
+  system: { accent: "#ea580c", soft: "#fff7ed", header: "#7c2d12" },
+  other: { accent: "#7c3aed", soft: "#f5f3ff", header: "#4c1d95" }
+};
+
+function chunkPairs<T>(items: T[]): Array<[T, T | null]> {
+  const rows: Array<[T, T | null]> = [];
+  for (let i = 0; i < items.length; i += 2) {
+    rows.push([items[i], items[i + 1] ?? null]);
+  }
+  return rows;
+}
+
 function AppContent() {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
@@ -150,11 +165,14 @@ function AppContent() {
   const rightWidth = !isMobile && isDesktopLayout && newsVisible ? 380 : 0;
   // Dynamic width calculation
   const mainPanelWidth = isMobile
-    ? width - 32
+    ? width - 24
     : Math.max(width - navWidth - rightWidth - 64, 300);
 
-  const gridColumns = resolveColumns(mainPanelWidth);
-  const itemWidth = Math.floor((mainPanelWidth - (gridColumns - 1) * 20) / gridColumns);
+  const gridColumns = isMobile ? 2 : resolveColumns(mainPanelWidth);
+  const itemGap = isMobile ? 12 : 20;
+  const itemWidth = Math.floor((mainPanelWidth - (gridColumns - 1) * itemGap) / gridColumns);
+  const mobileCardWidth = Math.max(138, Math.floor((mainPanelWidth - 36) / 2));
+  const appCardWidth = isMobile ? mobileCardWidth : itemWidth - 24;
   const webDragEnabled = false;
   const pinnedSet = useMemo(() => new Set(pinnedIds), [pinnedIds]);
 
@@ -183,12 +201,15 @@ function AppContent() {
     })();
   }, []);
 
-  const groupedApps = useMemo(() => {
+  const orderedApps = useMemo(() => {
     const byId = new Map(apps.map((app) => [app.id, app]));
     const sorted = orderedIds.map((id) => byId.get(id)).filter(Boolean) as InstalledApp[];
     const remain = apps.filter((app) => !orderedIds.includes(app.id));
-    const all = [...sorted, ...remain];
-    const unpinned = all.filter((app) => !pinnedSet.has(app.id));
+    return [...sorted, ...remain];
+  }, [apps, orderedIds]);
+
+  const groupedApps = useMemo(() => {
+    const unpinned = orderedApps.filter((app) => !pinnedSet.has(app.id));
 
     const keyword = query.trim().toLowerCase();
     const filtered = keyword
@@ -208,7 +229,19 @@ function AppContent() {
       groups[resolveGroup(app)].push(app);
     }
     return groups;
-  }, [apps, orderedIds, query, groupOverrides, pinnedSet]);
+  }, [orderedApps, query, groupOverrides, pinnedSet]);
+
+  const hotApps = useMemo(() => {
+    if (!isMobile) return [];
+    const keyword = query.trim().toLowerCase();
+    const candidates = orderedApps.filter((app) => {
+      if (pinnedSet.has(app.id)) return false;
+      if (!keyword) return true;
+      const text = `${app.name} ${app.packageName}`.toLowerCase();
+      return text.includes(keyword);
+    });
+    return candidates.slice(0, 10);
+  }, [isMobile, orderedApps, pinnedSet, query]);
 
   const pinnedApps = useMemo(() => {
     const byId = new Map(apps.map((app) => [app.id, app]));
@@ -405,7 +438,7 @@ function AppContent() {
   }, [isElectronRuntime, scanLoading, newsLoading]);
 
   return (
-    <View className="flex-1 mesh-bg" style={{ paddingTop: insets.top }}>
+    <View className="flex-1 bg-slate-50" style={{ paddingTop: insets.top }}>
       <StatusBar barStyle="dark-content" backgroundColor="transparent" translucent />
       {bootLoading && (
         <View className="absolute inset-0 z-[80] items-center justify-center bg-slate-950/35 backdrop-blur-sm">
@@ -434,15 +467,15 @@ function AppContent() {
         </View>
       )}
 
-      <View className="flex-1 flex-col p-4 md:p-6 max-w-[1920px] mx-auto w-full h-full relative">
+      <View className={`flex-1 flex-col ${isMobile ? "px-3 pt-3 pb-0" : "p-4 md:p-6"} max-w-[1920px] mx-auto w-full h-full relative`}>
 
         {/* Top Bar */}
-        <View className={`bg-white/75 glass-panel rounded-[2rem] p-4 md:p-5 mb-4 md:mb-7 flex-row items-center justify-between z-20 shadow-sm ${isMobile ? "mx-1" : ""}`}>
+        <View className={`${isMobile ? "rounded-2xl px-3 py-3 mb-3" : "rounded-2xl p-4 md:p-5 mb-4 md:mb-6"} flex-row items-center justify-between border border-slate-200 bg-white z-20`}>
           <View className="flex-row items-center gap-3 md:gap-4">
-            <View className={`${isMobile ? "h-10 w-10" : "h-14 w-14"} rounded-2xl bg-gradient-brand items-center justify-center shadow-lg shadow-brand-500/30 overflow-hidden`}>
+            <View className={`${isMobile ? "h-10 w-10" : "h-12 w-12"} rounded-xl bg-slate-100 items-center justify-center overflow-hidden`}>
               <Image
                 source={require("./logo.jpeg")}
-                style={{ width: isMobile ? 32 : 36, height: isMobile ? 32 : 36, borderRadius: 8 }}
+                style={{ width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, borderRadius: 8 }}
                 resizeMode="contain"
               />
             </View>
@@ -453,7 +486,7 @@ function AppContent() {
               </View>
             )}
             {isMobile && (
-              <Text style={{ fontSize: 20 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
+              <Text style={{ fontSize: 19 * fontScale }} className="font-semibold text-slate-900">guan</Text>
             )}
           </View>
 
@@ -466,7 +499,6 @@ function AppContent() {
                 placeholderTextColor="#94a3b8"
                 value={query}
                 onChangeText={setQuery}
-                style={{ outlineStyle: 'none' }}
               />
               {query.length > 0 && (
                 <Pressable onPress={() => setQuery('')}>
@@ -479,7 +511,7 @@ function AppContent() {
           <View className="flex-row items-center gap-2 md:gap-3">
             {isMobile && (
               <Pressable
-                onPress={() => Alert.alert("Search", "Search feature coming soon")}
+                onPress={() => setNewsVisible(false)}
                 className="h-10 w-10 items-center justify-center rounded-full bg-slate-100"
               >
                 <Ionicons name="search" size={20} color="#64748b" />
@@ -487,8 +519,7 @@ function AppContent() {
             )}
             <Pressable
               onPress={() => setNewsVisible(v => !v)}
-              className={`${isMobile ? "h-10 w-10" : "h-12 w-12"} rounded-xl items-center justify-center transition-all ${newsVisible ? 'bg-brand-50 text-brand-600 border border-brand-200 shadow-sm' : 'bg-transparent text-slate-500 hover:bg-slate-100'
-                }`}
+              className={`${isMobile ? "h-10 w-10" : "h-11 w-11"} rounded-xl items-center justify-center border ${newsVisible ? "bg-blue-50 border-blue-200" : "bg-white border-slate-200"}`}
             >
               <Ionicons name={newsVisible ? "newspaper" : "newspaper-outline"} size={isMobile ? 20 : 22} color={newsVisible ? "#58abed" : "#64748b"} />
             </Pressable>
@@ -499,8 +530,29 @@ function AppContent() {
           </View>
         </View>
 
+        {isMobile && !newsVisible && (
+          <View className="mb-3 rounded-2xl border border-slate-200 bg-white px-3 py-2.5">
+            <View className="flex-row items-center">
+              <Ionicons name="search" size={18} color="#94a3b8" />
+              <TextInput
+                className="flex-1 ml-2.5 text-[15px] text-slate-700"
+                placeholder="搜索应用名称或包名"
+                placeholderTextColor="#94a3b8"
+                value={query}
+                onChangeText={setQuery}
+                style={{ minHeight: 30 }}
+              />
+              {query.length > 0 && (
+                <Pressable onPress={() => setQuery("")} className="h-8 w-8 items-center justify-center rounded-full bg-slate-100">
+                  <Ionicons name="close" size={16} color="#94a3b8" />
+                </Pressable>
+              )}
+            </View>
+          </View>
+        )}
+
         {/* Main Layout */}
-        <View className="flex-1 flex-row gap-6 overflow-hidden relative">
+        <View className={`flex-1 flex-row ${isMobile ? "gap-3" : "gap-6"} overflow-hidden relative`}>
 
           {/* Sidebar (Desktop Only) */}
           {!isMobile && isDesktopLayout && (
@@ -656,7 +708,7 @@ function AppContent() {
             )}
 
             {/* Main App Grid Container with Glass Panel */}
-            <View className="flex-1 glass-panel rounded-[2rem] border border-white/60 overflow-hidden relative">
+            <View className="flex-1 rounded-2xl border border-slate-200 bg-white overflow-hidden relative">
               {scanLoading && (
                 <View className="absolute top-4 right-5 z-20 rounded-2xl bg-white/90 border border-brand-100 px-4 py-3 shadow-lg">
                   <View className="flex-row items-center">
@@ -674,77 +726,225 @@ function AppContent() {
               )}
               <ScrollView
                 showsVerticalScrollIndicator={false}
-                className="flex-1 px-4 md:px-6 pt-6"
-                contentContainerStyle={{ paddingBottom: 100 }}
+                className={`flex-1 ${isMobile ? "px-2 pt-4" : "px-4 md:px-6 pt-6"}`}
+                contentContainerStyle={{ paddingBottom: isMobile ? 126 + insets.bottom : 100 }}
               >
+                {isMobile && hotApps.length > 0 && (
+                  <View className="mb-5 rounded-2xl border border-slate-200 bg-white p-3">
+                    <View className="mb-3 flex-row items-center justify-between">
+                      <View className="flex-row items-center">
+                        <View className="mr-2 h-5 w-1 rounded-full bg-blue-500" />
+                        <Text className="text-base font-semibold text-slate-900">快捷打开</Text>
+                      </View>
+                      <Text className="text-xs text-slate-400">常用</Text>
+                    </View>
+                    <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={{ paddingRight: 4 }}>
+                      {hotApps.map((app) => (
+                        <Pressable
+                          key={app.id}
+                          onPress={() => void onAppPress(app)}
+                          className="mr-2.5 w-[150px] rounded-xl border px-3 py-3"
+                          style={{
+                            minHeight: 82,
+                            backgroundColor: GROUP_THEME[resolveGroup(app)].soft,
+                            borderColor: `${GROUP_THEME[resolveGroup(app)].accent}33`
+                          }}
+                        >
+                          <View className="mb-2 h-8 w-8 items-center justify-center rounded-lg bg-white/90">
+                            <Ionicons name="flash-outline" size={16} color={GROUP_THEME[resolveGroup(app)].accent} />
+                          </View>
+                          <Text className="text-[13px] font-medium leading-5" numberOfLines={2} style={{ color: GROUP_THEME[resolveGroup(app)].header }}>
+                            {app.name}
+                          </Text>
+                          <Text className="mt-1 text-[10px] text-slate-500" numberOfLines={1}>
+                            {GROUP_LABEL[resolveGroup(app)]}
+                          </Text>
+                        </Pressable>
+                      ))}
+                    </ScrollView>
+                  </View>
+                )}
+
                 {pinnedApps.length > 0 && (
-                  <View className="mb-8 rounded-3xl border border-amber-100 bg-gradient-to-br from-amber-50/80 to-white p-4">
-                    <View className="flex-row items-center mb-4 pl-1 border-b border-amber-100 pb-2">
-                      <View className="h-6 w-1 rounded-full bg-amber-500 mr-3" />
-                      <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">置顶应用</Text>
-                      <View className="bg-amber-50 px-2.5 py-0.5 rounded-full">
-                        <Text className="text-xs font-bold text-amber-600">{pinnedApps.length}</Text>
+                  <View className={`mb-5 ${isMobile ? "rounded-2xl p-3" : "rounded-2xl p-4"} border border-slate-200 bg-white`}>
+                    <View className={`flex-row items-center ${isMobile ? "mb-3 pb-2" : "mb-4 pb-2"} pl-1 border-b border-slate-200`}>
+                      <View className="h-5 w-1 rounded-full bg-blue-500 mr-3" />
+                      <Text className={`${isMobile ? "text-base" : "text-lg"} font-semibold text-slate-900 mr-3`}>置顶应用</Text>
+                      <View className="bg-slate-100 px-2.5 py-0.5 rounded-full">
+                        <Text className="text-xs font-medium text-slate-600">{pinnedApps.length}</Text>
                       </View>
                     </View>
-                    <View className="flex-row flex-wrap gap-4">
-                      {pinnedApps.map((app) => (
-                        <AppItem
-                          key={app.id}
-                          app={app}
-                          fontScale={fontScale}
-                          cardScale={cardScale}
-                          itemWidth={itemWidth - (isMobile ? 0 : 24)}
-                          groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                          selected={selectedAppId === app.id}
-                          pinned
-                          dragEnabled={false}
-                          onTogglePinned={togglePinned}
-                          onPress={onAppPress}
-                          onLongPress={(target) => setSelectedAppId(target.id)}
-                        />
-                      ))}
-                    </View>
+                    {isMobile ? (
+                      <View>
+                        {chunkPairs(pinnedApps).map(([left, right], idx) => (
+                          <View key={`${left.id}-${idx}`} className="flex-row justify-between">
+                            <AppItem
+                              app={left}
+                              fontScale={fontScale}
+                              cardScale={cardScale}
+                              itemWidth={appCardWidth}
+                              groupLabel={GROUP_LABEL[resolveGroup(left)]}
+                              selected={selectedAppId === left.id}
+                              pinned
+                              accentColor={GROUP_THEME[resolveGroup(left)].accent}
+                              surfaceColor={GROUP_THEME[resolveGroup(left)].soft}
+                              dragEnabled={false}
+                              onTogglePinned={togglePinned}
+                              onPress={onAppPress}
+                              onLongPress={(target) => setSelectedAppId(target.id)}
+                            />
+                            {right ? (
+                              <AppItem
+                                app={right}
+                                fontScale={fontScale}
+                                cardScale={cardScale}
+                                itemWidth={appCardWidth}
+                                groupLabel={GROUP_LABEL[resolveGroup(right)]}
+                                selected={selectedAppId === right.id}
+                                pinned
+                                accentColor={GROUP_THEME[resolveGroup(right)].accent}
+                                surfaceColor={GROUP_THEME[resolveGroup(right)].soft}
+                                dragEnabled={false}
+                                onTogglePinned={togglePinned}
+                                onPress={onAppPress}
+                                onLongPress={(target) => setSelectedAppId(target.id)}
+                              />
+                            ) : (
+                              <View style={{ width: appCardWidth }} />
+                            )}
+                          </View>
+                        ))}
+                      </View>
+                    ) : (
+                      <View className="flex-row flex-wrap gap-4">
+                        {pinnedApps.map((app) => (
+                          <AppItem
+                            key={app.id}
+                            app={app}
+                            fontScale={fontScale}
+                            cardScale={cardScale}
+                            itemWidth={appCardWidth}
+                            groupLabel={GROUP_LABEL[resolveGroup(app)]}
+                            selected={selectedAppId === app.id}
+                            pinned
+                            accentColor={GROUP_THEME[resolveGroup(app)].accent}
+                            surfaceColor={GROUP_THEME[resolveGroup(app)].soft}
+                            dragEnabled={false}
+                            onTogglePinned={togglePinned}
+                            onPress={onAppPress}
+                            onLongPress={(target) => setSelectedAppId(target.id)}
+                          />
+                        ))}
+                      </View>
+                    )}
                   </View>
                 )}
 
                 {visibleGroups.map((group) => (
-                  <View key={group} className="mb-8 rounded-3xl border border-slate-100 bg-white/80 p-4">
-                    <View className="flex-row items-center mb-4 pl-1 border-b border-slate-100 pb-2">
-                      <View className="h-6 w-1 rounded-full bg-brand-500 mr-3" />
-                      <Text className="text-lg font-bold text-slate-800 tracking-tight mr-3">
+                  <View
+                    key={group}
+                    className={`mb-5 ${isMobile ? "rounded-2xl p-3" : "rounded-2xl p-4"} border`}
+                    style={{ borderColor: `${GROUP_THEME[group].accent}33`, backgroundColor: GROUP_THEME[group].soft }}
+                  >
+                    <View className={`flex-row items-center ${isMobile ? "mb-3 pb-2" : "mb-4 pb-2"} pl-1 border-b`} style={{ borderColor: `${GROUP_THEME[group].accent}22` }}>
+                      <View className="h-5 w-1 rounded-full mr-3" style={{ backgroundColor: GROUP_THEME[group].accent }} />
+                      <Text className={`${isMobile ? "text-base" : "text-lg"} font-semibold tracking-tight mr-3`} style={{ color: GROUP_THEME[group].header }}>
                         {GROUP_LABEL[group]}
                       </Text>
-                      <View className="bg-slate-100 px-2.5 py-0.5 rounded-full">
-                        <Text className="text-xs font-bold text-slate-500">{groupedApps[group].length}</Text>
+                      <View className="px-2.5 py-0.5 rounded-full bg-white/80">
+                        <Text className="text-xs font-medium" style={{ color: GROUP_THEME[group].header }}>
+                          {groupedApps[group].length}
+                        </Text>
                       </View>
                     </View>
 
-                    <View className="flex-row flex-wrap gap-4">
-                      {groupedApps[group].map((app) => (
-                        <AppItem
-                          key={app.id}
-                          app={app}
-                          fontScale={fontScale}
-                          cardScale={cardScale}
-                          itemWidth={itemWidth - (isMobile ? 0 : 24)} // Adjusted for padding
-                          groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                          selected={selectedAppId === app.id}
-                          pinned={pinnedSet.has(app.id)}
-                          dragEnabled={false}
-                          dragHint={
-                            webDragEnabled
-                              ? dragOverId === app.id
-                                ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
-                                : "\u62d6\u62fd\u6392\u5e8f"
-                              : "\u6392\u5e8f"
-                          }
-                          onTogglePinned={togglePinned}
-                          webDragProps={undefined}
-                          onPress={onAppPress}
-                          onLongPress={(target) => setSelectedAppId(target.id)}
-                        />
-                      ))}
-                    </View>
+                    {isMobile ? (
+                      <View>
+                        {chunkPairs(groupedApps[group]).map(([left, right], idx) => (
+                          <View key={`${left.id}-${idx}`} className="flex-row justify-between">
+                            <AppItem
+                              app={left}
+                              fontScale={fontScale}
+                              cardScale={cardScale}
+                              itemWidth={appCardWidth}
+                              groupLabel={GROUP_LABEL[group]}
+                              selected={selectedAppId === left.id}
+                              pinned={pinnedSet.has(left.id)}
+                              accentColor={GROUP_THEME[group].accent}
+                              surfaceColor="#ffffff"
+                              dragEnabled={false}
+                              dragHint={
+                                webDragEnabled
+                                  ? dragOverId === left.id
+                                    ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
+                                    : "\u62d6\u62fd\u6392\u5e8f"
+                                  : "\u6392\u5e8f"
+                              }
+                              onTogglePinned={togglePinned}
+                              webDragProps={undefined}
+                              onPress={onAppPress}
+                              onLongPress={(target) => setSelectedAppId(target.id)}
+                            />
+                            {right ? (
+                              <AppItem
+                                app={right}
+                                fontScale={fontScale}
+                                cardScale={cardScale}
+                                itemWidth={appCardWidth}
+                                groupLabel={GROUP_LABEL[group]}
+                                selected={selectedAppId === right.id}
+                                pinned={pinnedSet.has(right.id)}
+                                accentColor={GROUP_THEME[group].accent}
+                                surfaceColor="#ffffff"
+                                dragEnabled={false}
+                                dragHint={
+                                  webDragEnabled
+                                    ? dragOverId === right.id
+                                      ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
+                                      : "\u62d6\u62fd\u6392\u5e8f"
+                                    : "\u6392\u5e8f"
+                                }
+                                onTogglePinned={togglePinned}
+                                webDragProps={undefined}
+                                onPress={onAppPress}
+                                onLongPress={(target) => setSelectedAppId(target.id)}
+                              />
+                            ) : (
+                              <View style={{ width: appCardWidth }} />
+                            )}
+                          </View>
+                        ))}
+                      </View>
+                    ) : (
+                      <View className="flex-row flex-wrap gap-4">
+                        {groupedApps[group].map((app) => (
+                          <AppItem
+                            key={app.id}
+                            app={app}
+                            fontScale={fontScale}
+                            cardScale={cardScale}
+                            itemWidth={appCardWidth}
+                            groupLabel={GROUP_LABEL[group]}
+                            selected={selectedAppId === app.id}
+                            pinned={pinnedSet.has(app.id)}
+                            accentColor={GROUP_THEME[group].accent}
+                            surfaceColor="#ffffff"
+                            dragEnabled={false}
+                            dragHint={
+                              webDragEnabled
+                                ? dragOverId === app.id
+                                  ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
+                                  : "\u62d6\u62fd\u6392\u5e8f"
+                                : "\u6392\u5e8f"
+                            }
+                            onTogglePinned={togglePinned}
+                            webDragProps={undefined}
+                            onPress={onAppPress}
+                            onLongPress={(target) => setSelectedAppId(target.id)}
+                          />
+                        ))}
+                      </View>
+                    )}
                   </View>
                 ))}
 
@@ -769,6 +969,7 @@ function AppContent() {
                 loading={newsLoading}
                 error={newsError}
                 fontScale={fontScale}
+                isMobile={isMobile}
                 onChangeCategory={setNewsCategory}
                 onRefresh={() => void loadNews(newsCategory)}
                 onOpenDetail={(item) => void openNewsDetail(item)}
@@ -780,7 +981,10 @@ function AppContent() {
 
         {/* Mobile Bottom Navigation - Only show when News is NOT visible (or maybe News is a modal) */}
         {isMobile && !newsVisible && (
-          <View className="absolute bottom-6 left-4 right-4 bg-white/90 backdrop-blur-xl rounded-2xl shadow-xl border border-white/50 flex-row justify-around p-2 z-50">
+          <View
+            className="absolute left-3 right-3 bg-white rounded-2xl border border-slate-200 flex-row justify-around p-2 z-50"
+            style={{ bottom: Math.max(insets.bottom + 8, 14) }}
+          >
             {NAV_ITEMS.map((item) => {
               const isActive = activeGroup === item.key;
               return (
@@ -790,13 +994,17 @@ function AppContent() {
                     setActiveGroup(item.key);
                     setNewsVisible(false);
                   }}
-                  className={`items-center justify-center p-2 rounded-xl transition-all ${isActive ? "bg-brand-50" : "bg-transparent"}`}
+                  className={`items-center justify-center rounded-xl transition-all ${isActive ? "bg-blue-50" : "bg-transparent"}`}
+                  style={{ minWidth: 58, minHeight: 50, paddingHorizontal: 8, paddingVertical: 5 }}
                 >
                   <Ionicons
                     name={isActive ? item.icon.replace('-outline', '') as any : item.icon}
-                    size={24}
-                    color={isActive ? "#58abed" : "#94a3b8"}
+                    size={21}
+                    color={isActive ? "#2563eb" : "#94a3b8"}
                   />
+                  <Text className={`mt-0.5 text-[10px] ${isActive ? "text-blue-700 font-semibold" : "text-slate-400"}`}>
+                    {item.label}
+                  </Text>
                 </Pressable>
               )
             })}

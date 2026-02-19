@@ -13,24 +13,12 @@ type Props = {
   dragHint?: string;
   pinned?: boolean;
   webDragProps?: Record<string, any>;
+  accentColor?: string;
+  surfaceColor?: string;
   onTogglePinned?: (app: InstalledApp) => void;
   onPress: (app: InstalledApp) => void;
   onLongPress?: (app: InstalledApp) => void;
 };
-
-const CARD_ACCENTS = [
-  { tone: "#58abed", soft: "#eaf4fd", deep: "#2f79b4" },
-  { tone: "#4cc9a6", soft: "#e8faf5", deep: "#1f8f74" },
-  { tone: "#f4a261", soft: "#fff4ea", deep: "#b76422" },
-  { tone: "#8f7cf0", soft: "#f1eefe", deep: "#5540b9" },
-  { tone: "#f071a3", soft: "#feeff5", deep: "#b43f72" }
-];
-
-function accentById(id: string) {
-  let hash = 0;
-  for (let i = 0; i < id.length; i += 1) hash = (hash * 33 + id.charCodeAt(i)) >>> 0;
-  return CARD_ACCENTS[hash % CARD_ACCENTS.length];
-}
 
 export function AppItem({
   app,
@@ -43,104 +31,75 @@ export function AppItem({
   dragHint,
   pinned,
   webDragProps,
+  accentColor = "#2563eb",
+  surfaceColor = "#ffffff",
   onTogglePinned,
   onPress,
   onLongPress
 }: Props) {
   const packageHint = app.packageName?.replace(/^desktop:/, "") || app.packageName;
   const hasPinToggle = typeof onTogglePinned === "function";
-  const accent = accentById(app.id);
+  const isCompact = itemWidth < 190;
 
   return (
-    <View
-      style={{
-        width: itemWidth,
-        marginBottom: 16
-      }}
-    >
+    <View style={{ width: itemWidth, marginBottom: 12 }}>
       <Pressable
         onPress={() => onPress(app)}
         onLongPress={() => onLongPress?.(app)}
-        className={`rounded-3xl overflow-hidden transition-all-smooth relative group border ${
-          selected ? "shadow-glow cursor-default transform scale-[1.02] z-10" : "bg-white hover:shadow-lg hover:-translate-y-1 cursor-pointer"
-        }`}
+        className={`relative overflow-hidden rounded-2xl border bg-white ${selected ? "shadow-sm" : ""}`}
         {...(webDragProps as any)}
         style={{
-          paddingVertical: 14 * cardScale,
-          minHeight: 148,
-          backgroundColor: selected ? accent.tone : "#ffffff",
-          borderColor: selected ? accent.tone : accent.soft
+          minHeight: isCompact ? 116 : 130,
+          paddingVertical: (isCompact ? 10 : 12) * cardScale,
+          backgroundColor: surfaceColor,
+          borderColor: selected ? accentColor : "#e2e8f0",
+          borderWidth: selected ? 1.5 : 1
         }}
       >
-        <View
-          className="absolute left-0 top-0 h-full w-1.5"
-          style={{ backgroundColor: selected ? "rgba(255,255,255,0.75)" : accent.tone }}
-        />
-
-        {selected && (
-          <View className="absolute top-3 right-3 z-10 bg-white/20 rounded-full p-1">
-            <Ionicons name="checkmark" size={14} color="white" />
-          </View>
+        {hasPinToggle && (
+          <Pressable
+            onPress={(e: any) => {
+              e?.stopPropagation?.();
+              onTogglePinned?.(app);
+            }}
+            className="absolute right-2 top-2 z-10 items-center justify-center rounded-full bg-slate-50"
+            style={{ minWidth: 44, minHeight: 44 }}
+          >
+            <Ionicons name={pinned ? "star" : "star-outline"} size={15} color={pinned ? "#eab308" : accentColor} />
+          </Pressable>
         )}
 
-        <Pressable
-          onPress={(e: any) => {
-            e?.stopPropagation?.();
-            onTogglePinned?.(app);
-          }}
-          className="absolute top-3 left-3 z-10 h-7 w-7 items-center justify-center rounded-full"
-          style={{ backgroundColor: selected ? "rgba(255,255,255,0.2)" : accent.soft }}
-        >
-          <Ionicons name={pinned ? "star" : "star-outline"} size={13} color={pinned ? "#f59e0b" : accent.deep} />
-        </Pressable>
-
-        <View className={`px-4 ${hasPinToggle ? "pl-12" : ""}`}>
-          <View className="flex-row items-center justify-between">
-            {!!groupLabel && (
-              <View className="rounded-full px-2.5 py-1" style={{ backgroundColor: selected ? "rgba(255,255,255,0.2)" : accent.soft }}>
-                <Text style={{ fontSize: 10 * fontScale, letterSpacing: 0.2, color: selected ? "#ffffff" : accent.deep }} className="font-semibold">
-                  {groupLabel}
-                </Text>
-              </View>
-            )}
-            {!groupLabel && <View />}
-            <Text style={{ fontSize: 10 * fontScale }} className={`${selected ? "text-white/70" : "text-slate-300"}`}>
-              {pinned ? "已置顶" : `#${app.id.slice(-4)}`}
-            </Text>
+        <View className={`px-3.5 ${hasPinToggle ? "pr-12" : ""}`}>
+          <View className="mb-2.5 flex-row items-center justify-between">
+            <View className="rounded-full bg-slate-100 px-2 py-0.5">
+              <Text style={{ fontSize: 10 * fontScale }} className="font-medium text-slate-500">
+                {groupLabel || "应用"}
+              </Text>
+            </View>
+            {selected && <Ionicons name="checkmark-circle" size={16} color={accentColor} />}
           </View>
 
-          <Text
-            style={{ fontSize: 16 * fontScale, letterSpacing: 0.1 }}
-            className={`mt-3 font-bold leading-6 ${selected ? "text-white" : "text-slate-800 group-hover:text-slate-900"}`}
-            numberOfLines={2}
-          >
+          <Text style={{ fontSize: (isCompact ? 14 : 15) * fontScale }} className="font-semibold text-slate-900" numberOfLines={2}>
             {app.name}
           </Text>
 
-          <Text
-            style={{ fontSize: 11 * fontScale, letterSpacing: 0.1 }}
-            numberOfLines={1}
-            className={`mt-1 ${selected ? "text-white/70" : "text-slate-400"}`}
-          >
-            {packageHint}
-          </Text>
+          {!isCompact && (
+            <Text style={{ fontSize: 11 * fontScale }} numberOfLines={1} className="mt-1 text-slate-400">
+              {packageHint}
+            </Text>
+          )}
 
-          <View className="mt-4 flex-row items-center justify-between">
-            <View className="rounded-xl px-2.5 py-1" style={{ backgroundColor: selected ? "rgba(255,255,255,0.22)" : accent.soft }}>
-              <Text style={{ fontSize: 10 * fontScale, color: selected ? "#ffffff" : accent.deep }} className="font-semibold">
-                点击打开
-              </Text>
-            </View>
-
-            {dragEnabled ? (
+          <View className="mt-3 flex-row items-center justify-between">
+            <Text style={{ fontSize: 11 * fontScale, color: accentColor }} className="font-medium">
+              打开
+            </Text>
+            {dragEnabled && !isCompact && (
               <View className="flex-row items-center">
-                <Ionicons name="reorder-three-outline" size={14} color={selected ? "rgba(255,255,255,0.8)" : accent.deep} />
-                <Text style={{ fontSize: 10 * fontScale }} className={`ml-1 ${selected ? "text-white/80" : "text-slate-400"}`}>
+                <Ionicons name="reorder-three-outline" size={14} color="#94a3b8" />
+                <Text style={{ fontSize: 10 * fontScale }} className="ml-1 text-slate-400">
                   {dragHint || "拖拽排序"}
                 </Text>
               </View>
-            ) : (
-              <View />
             )}
           </View>
         </View>

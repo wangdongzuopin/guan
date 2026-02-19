@@ -6,6 +6,8 @@ export type InstalledApp = {
   packageName: string;
   launchUri?: string;
   executablePath?: string;
+  shortcutPath?: string;
+  launchArgs?: string;
   iconDataUrl?: string;
 };
 

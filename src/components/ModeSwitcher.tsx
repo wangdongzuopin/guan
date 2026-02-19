@@ -15,23 +15,24 @@ const options: { key: AccessibilityMode; label: string; icon: keyof typeof Ionic
 
 export function ModeSwitcher({ mode, onChange }: Props) {
   return (
-    <View className="flex-row rounded-2xl bg-slate-100 p-1.5 border border-slate-200">
+    <View className="flex-row rounded-xl bg-slate-100/80 p-1 border border-slate-200">
       {options.map((item) => {
         const active = item.key === mode;
         return (
           <Pressable
             key={item.key}
             onPress={() => onChange(item.key)}
-            className={`flex-row items-center rounded-xl px-3 py-2 ${
-              active ? "bg-white shadow-sm" : "bg-transparent"
-            }`}
+            className={`flex-row items-center rounded-lg px-3 py-1.5 transition-all duration-300 ${active
+                ? "bg-white shadow-sm text-brand-600 scale-100"
+                : "bg-transparent text-slate-500 scale-95 opacity-70 hover:opacity-100"
+              }`}
           >
-            <Ionicons 
-              name={item.icon} 
-              size={14} 
-              color={active ? "#0c9df0" : "#64748b"} 
+            <Ionicons
+              name={item.icon}
+              size={14}
+              color={active ? "#0c9df0" : "#64748b"}
             />
-            <Text className={`text-xs font-semibold ml-1.5 ${active ? "text-brand-600" : "text-slate-500"}`}>
+            <Text className={`text-xs font-bold ml-1.5 ${active ? "text-slate-800" : "text-slate-500"}`}>
               {item.label}
             </Text>
           </Pressable>

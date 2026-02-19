@@ -3,7 +3,7 @@ import { Linking, Platform } from "react-native";
 import { InstalledApp, ScanProgress } from "../types";
 import desktopApps from "../cache/desktopApps.generated.json";
 
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v6";
 const CACHE_PREFIX = "app_collection_scan_cache";
 
 const fallbackMobileApps: InstalledApp[] = [
@@ -83,6 +83,8 @@ function normalizeDesktopApps(raw: any[]): InstalledApp[] {
         packageName: item?.packageName || `desktop:${index}`,
         launchUri,
         executablePath: executablePath || undefined,
+        shortcutPath: typeof item?.shortcutPath === "string" ? item.shortcutPath : undefined,
+        launchArgs: typeof item?.launchArgs === "string" ? item.launchArgs : undefined,
         iconDataUrl: typeof item?.iconDataUrl === "string" ? item.iconDataUrl : undefined
       };
     })
@@ -156,9 +158,14 @@ async function scanDesktop(onProgress?: (progress: ScanProgress) => void): Promi
     try {
       const apps = await window.electronAPI.scanApps();
       unsubscribe();
-      return ensureUniqueAppIds(apps);
+      const normalized = ensureUniqueAppIds(apps);
+      if (normalized.length > 0) {
+        return normalized;
+      }
+      return fallbackDesktopApps;
     } catch {
       unsubscribe();
+      return fallbackDesktopApps;
     }
   }
 

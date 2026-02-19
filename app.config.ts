@@ -1,11 +1,11 @@
 import type { ExpoConfig } from "expo/config";
 
 const config: ExpoConfig = {
-  name: "AppCollection",
+  name: "guan",
   slug: "app-collection-rn",
   version: "1.0.0",
   orientation: "portrait",
-  scheme: "appcollection",
+  scheme: "guan",
   userInterfaceStyle: "light",
   runtimeVersion: {
     policy: "sdkVersion"

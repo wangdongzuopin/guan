@@ -106,11 +106,19 @@ const NAV_ITEMS: Array<{ key: GroupKey | "all"; label: string; icon: keyof typeo
   { key: "other", label: "\u5176\u4ed6", icon: "albums-outline" }
 ];
 
-const GROUP_THEME: Record<GroupKey, { accent: string; soft: string; header: string }> = {
+const GROUP_THEME_DEFAULT: Record<GroupKey, { accent: string; soft: string; header: string }> = {
   office: { accent: "#2563eb", soft: "#eff6ff", header: "#1e3a8a" },
   development: { accent: "#0d9488", soft: "#f0fdfa", header: "#134e4a" },
   system: { accent: "#ea580c", soft: "#fff7ed", header: "#7c2d12" },
   other: { accent: "#7c3aed", soft: "#f5f3ff", header: "#4c1d95" }
+};
+
+// Color-weak friendly palette (high contrast, avoids confusing red/green reliance)
+const GROUP_THEME_COLOR_WEAK: Record<GroupKey, { accent: string; soft: string; header: string }> = {
+  office: { accent: "#0072B2", soft: "#EAF5FC", header: "#0B4F78" },
+  development: { accent: "#E69F00", soft: "#FFF6E1", header: "#8A5A00" },
+  system: { accent: "#009E73", soft: "#EAF9F4", header: "#0F6450" },
+  other: { accent: "#CC79A7", soft: "#FCEFF7", header: "#7F3A66" }
 };
 
 function chunkPairs<T>(items: T[]): Array<[T, T | null]> {
@@ -159,6 +167,10 @@ function AppContent() {
 
   const fontScale = useMemo(() => (mode === "elderly" ? 1.35 : 1), [mode]);
   const cardScale = useMemo(() => (mode === "elderly" ? 1.2 : 1), [mode]);
+  const groupTheme = useMemo(
+    () => (mode === "colorWeak" ? GROUP_THEME_COLOR_WEAK : GROUP_THEME_DEFAULT),
+    [mode]
+  );
   const isDesktopLayout = width >= 1024;
 
   const navWidth = !isMobile && isDesktopLayout ? (navCollapsed ? 90 : 240) : 0;
@@ -470,9 +482,9 @@ function AppContent() {
       <View className={`flex-1 flex-col ${isMobile ? "px-3 pt-3 pb-0" : "p-4 md:p-6"} max-w-[1920px] mx-auto w-full h-full relative`}>
 
         {/* Top Bar */}
-        <View className={`${isMobile ? "rounded-2xl px-3 py-3 mb-3" : "rounded-2xl p-4 md:p-5 mb-4 md:mb-6"} flex-row items-center justify-between border border-slate-200 bg-white z-20`}>
+        <View className={`${isMobile ? "rounded-2xl px-3 py-3 mb-3" : "rounded-2xl p-4 md:p-5 mb-4 md:mb-6"} flex-row items-center justify-between border border-brand-500 bg-brand-600 z-20`}>
           <View className="flex-row items-center gap-3 md:gap-4">
-            <View className={`${isMobile ? "h-10 w-10" : "h-12 w-12"} rounded-xl bg-slate-100 items-center justify-center overflow-hidden`}>
+            <View className={`${isMobile ? "h-10 w-10" : "h-12 w-12"} rounded-xl bg-white/15 items-center justify-center overflow-hidden`}>
               <Image
                 source={require("./logo.jpeg")}
                 style={{ width: isMobile ? 28 : 32, height: isMobile ? 28 : 32, borderRadius: 8 }}
@@ -481,12 +493,12 @@ function AppContent() {
             </View>
             {!isMobile && (
               <View>
-                <Text style={{ fontSize: 30 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
-                <Text style={{ fontSize: 15 * fontScale }} className="text-slate-500 font-semibold tracking-wide">Workspace</Text>
+                <Text style={{ fontSize: 30 * fontScale, color: "#FFFFFF" }} className="font-bold tracking-tight">guan</Text>
+                <Text style={{ fontSize: 15 * fontScale, color: "#FFFFFF" }} className="font-semibold tracking-wide">Workspace</Text>
               </View>
             )}
             {isMobile && (
-              <Text style={{ fontSize: 19 * fontScale }} className="font-semibold text-slate-900">guan</Text>
+              <Text style={{ fontSize: 19 * fontScale, color: "#FFFFFF" }} className="font-semibold">guan</Text>
             )}
           </View>
 
@@ -512,21 +524,21 @@ function AppContent() {
             {isMobile && (
               <Pressable
                 onPress={() => setNewsVisible(false)}
-                className="h-10 w-10 items-center justify-center rounded-full bg-slate-100"
+                className="h-10 w-10 items-center justify-center rounded-full bg-white/15 border border-white/30"
               >
-                <Ionicons name="search" size={20} color="#64748b" />
+                <Ionicons name="search" size={20} color="#FFFFFF" />
               </Pressable>
             )}
             <Pressable
               onPress={() => setNewsVisible(v => !v)}
-              className={`${isMobile ? "h-10 w-10" : "h-11 w-11"} rounded-xl items-center justify-center border ${newsVisible ? "bg-blue-50 border-blue-200" : "bg-white border-slate-200"}`}
+              className={`${isMobile ? "h-10 w-10" : "h-11 w-11"} rounded-xl items-center justify-center border ${newsVisible ? "bg-white border-white" : "bg-white/15 border-white/30"}`}
             >
-              <Ionicons name={newsVisible ? "newspaper" : "newspaper-outline"} size={isMobile ? 20 : 22} color={newsVisible ? "#58abed" : "#64748b"} />
+              <Ionicons name={newsVisible ? "newspaper" : "newspaper-outline"} size={isMobile ? 20 : 22} color={newsVisible ? "#2563eb" : "#FFFFFF"} />
             </Pressable>
 
-            {!isMobile && <View className="h-6 w-[1px] bg-slate-200" />}
+            {!isMobile && <View className="h-6 w-[1px] bg-white/35" />}
 
-            <ModeSwitcher mode={mode} onChange={setMode} />
+            <ModeSwitcher mode={mode} onChange={setMode} theme="dark" />
           </View>
         </View>
 
@@ -746,14 +758,14 @@ function AppContent() {
                           className="mr-2.5 w-[150px] rounded-xl border px-3 py-3"
                           style={{
                             minHeight: 82,
-                            backgroundColor: GROUP_THEME[resolveGroup(app)].soft,
-                            borderColor: `${GROUP_THEME[resolveGroup(app)].accent}33`
+                            backgroundColor: groupTheme[resolveGroup(app)].soft,
+                            borderColor: `${groupTheme[resolveGroup(app)].accent}33`
                           }}
                         >
                           <View className="mb-2 h-8 w-8 items-center justify-center rounded-lg bg-white/90">
-                            <Ionicons name="flash-outline" size={16} color={GROUP_THEME[resolveGroup(app)].accent} />
+                            <Ionicons name="flash-outline" size={16} color={groupTheme[resolveGroup(app)].accent} />
                           </View>
-                          <Text className="text-[13px] font-medium leading-5" numberOfLines={2} style={{ color: GROUP_THEME[resolveGroup(app)].header }}>
+                          <Text className="text-[13px] font-medium leading-5" numberOfLines={2} style={{ color: groupTheme[resolveGroup(app)].header }}>
                             {app.name}
                           </Text>
                           <Text className="mt-1 text-[10px] text-slate-500" numberOfLines={1}>
@@ -786,8 +798,8 @@ function AppContent() {
                               groupLabel={GROUP_LABEL[resolveGroup(left)]}
                               selected={selectedAppId === left.id}
                               pinned
-                              accentColor={GROUP_THEME[resolveGroup(left)].accent}
-                              surfaceColor={GROUP_THEME[resolveGroup(left)].soft}
+                              accentColor={groupTheme[resolveGroup(left)].accent}
+                              surfaceColor={groupTheme[resolveGroup(left)].soft}
                               dragEnabled={false}
                               onTogglePinned={togglePinned}
                               onPress={onAppPress}
@@ -802,8 +814,8 @@ function AppContent() {
                                 groupLabel={GROUP_LABEL[resolveGroup(right)]}
                                 selected={selectedAppId === right.id}
                                 pinned
-                                accentColor={GROUP_THEME[resolveGroup(right)].accent}
-                                surfaceColor={GROUP_THEME[resolveGroup(right)].soft}
+                                accentColor={groupTheme[resolveGroup(right)].accent}
+                                surfaceColor={groupTheme[resolveGroup(right)].soft}
                                 dragEnabled={false}
                                 onTogglePinned={togglePinned}
                                 onPress={onAppPress}
@@ -827,8 +839,8 @@ function AppContent() {
                             groupLabel={GROUP_LABEL[resolveGroup(app)]}
                             selected={selectedAppId === app.id}
                             pinned
-                            accentColor={GROUP_THEME[resolveGroup(app)].accent}
-                            surfaceColor={GROUP_THEME[resolveGroup(app)].soft}
+                            accentColor={groupTheme[resolveGroup(app)].accent}
+                            surfaceColor={groupTheme[resolveGroup(app)].soft}
                             dragEnabled={false}
                             onTogglePinned={togglePinned}
                             onPress={onAppPress}
@@ -844,15 +856,15 @@ function AppContent() {
                   <View
                     key={group}
                     className={`mb-5 ${isMobile ? "rounded-2xl p-3" : "rounded-2xl p-4"} border`}
-                    style={{ borderColor: `${GROUP_THEME[group].accent}33`, backgroundColor: GROUP_THEME[group].soft }}
+                    style={{ borderColor: `${groupTheme[group].accent}33`, backgroundColor: groupTheme[group].soft }}
                   >
-                    <View className={`flex-row items-center ${isMobile ? "mb-3 pb-2" : "mb-4 pb-2"} pl-1 border-b`} style={{ borderColor: `${GROUP_THEME[group].accent}22` }}>
-                      <View className="h-5 w-1 rounded-full mr-3" style={{ backgroundColor: GROUP_THEME[group].accent }} />
-                      <Text className={`${isMobile ? "text-base" : "text-lg"} font-semibold tracking-tight mr-3`} style={{ color: GROUP_THEME[group].header }}>
+                    <View className={`flex-row items-center ${isMobile ? "mb-3 pb-2" : "mb-4 pb-2"} pl-1 border-b`} style={{ borderColor: `${groupTheme[group].accent}22` }}>
+                      <View className="h-5 w-1 rounded-full mr-3" style={{ backgroundColor: groupTheme[group].accent }} />
+                      <Text className={`${isMobile ? "text-base" : "text-lg"} font-semibold tracking-tight mr-3`} style={{ color: groupTheme[group].header }}>
                         {GROUP_LABEL[group]}
                       </Text>
                       <View className="px-2.5 py-0.5 rounded-full bg-white/80">
-                        <Text className="text-xs font-medium" style={{ color: GROUP_THEME[group].header }}>
+                        <Text className="text-xs font-medium" style={{ color: groupTheme[group].header }}>
                           {groupedApps[group].length}
                         </Text>
                       </View>
@@ -870,7 +882,7 @@ function AppContent() {
                               groupLabel={GROUP_LABEL[group]}
                               selected={selectedAppId === left.id}
                               pinned={pinnedSet.has(left.id)}
-                              accentColor={GROUP_THEME[group].accent}
+                              accentColor={groupTheme[group].accent}
                               surfaceColor="#ffffff"
                               dragEnabled={false}
                               dragHint={
@@ -894,7 +906,7 @@ function AppContent() {
                                 groupLabel={GROUP_LABEL[group]}
                                 selected={selectedAppId === right.id}
                                 pinned={pinnedSet.has(right.id)}
-                                accentColor={GROUP_THEME[group].accent}
+                                accentColor={groupTheme[group].accent}
                                 surfaceColor="#ffffff"
                                 dragEnabled={false}
                                 dragHint={
@@ -927,7 +939,7 @@ function AppContent() {
                             groupLabel={GROUP_LABEL[group]}
                             selected={selectedAppId === app.id}
                             pinned={pinnedSet.has(app.id)}
-                            accentColor={GROUP_THEME[group].accent}
+                            accentColor={groupTheme[group].accent}
                             surfaceColor="#ffffff"
                             dragEnabled={false}
                             dragHint={
@@ -982,7 +994,7 @@ function AppContent() {
         {/* Mobile Bottom Navigation - Only show when News is NOT visible (or maybe News is a modal) */}
         {isMobile && !newsVisible && (
           <View
-            className="absolute left-3 right-3 bg-white rounded-2xl border border-slate-200 flex-row justify-around p-2 z-50"
+            className="absolute left-3 right-3 bg-brand-600 rounded-2xl border border-brand-500 flex-row justify-around p-2 z-50"
             style={{ bottom: Math.max(insets.bottom + 8, 14) }}
           >
             {NAV_ITEMS.map((item) => {
@@ -994,15 +1006,15 @@ function AppContent() {
                     setActiveGroup(item.key);
                     setNewsVisible(false);
                   }}
-                  className={`items-center justify-center rounded-xl transition-all ${isActive ? "bg-blue-50" : "bg-transparent"}`}
+                  className={`items-center justify-center rounded-xl transition-all ${isActive ? "bg-white" : "bg-transparent"}`}
                   style={{ minWidth: 58, minHeight: 50, paddingHorizontal: 8, paddingVertical: 5 }}
                 >
                   <Ionicons
                     name={isActive ? item.icon.replace('-outline', '') as any : item.icon}
                     size={21}
-                    color={isActive ? "#2563eb" : "#94a3b8"}
+                    color={isActive ? "#2563eb" : "#FFFFFF"}
                   />
-                  <Text className={`mt-0.5 text-[10px] ${isActive ? "text-blue-700 font-semibold" : "text-slate-400"}`}>
+                  <Text className={`mt-0.5 text-[10px] ${isActive ? "text-blue-700 font-semibold" : "text-white/90"}`}>
                     {item.label}
                   </Text>
                 </Pressable>

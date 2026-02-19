@@ -1,4 +1,4 @@
-export type AccessibilityMode = "normal" | "elderly" | "blind";
+export type AccessibilityMode = "normal" | "elderly" | "blind" | "colorWeak";
 
 export type InstalledApp = {
   id: string;

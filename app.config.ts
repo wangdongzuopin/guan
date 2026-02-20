@@ -19,6 +19,7 @@ const config: ExpoConfig = {
   },
   android: {
     package: "com.demo.appcollection",
+    edgeToEdgeEnabled: true,
     permissions: ["QUERY_ALL_PACKAGES"],
     intentFilters: [
       {

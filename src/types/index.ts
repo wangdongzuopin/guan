@@ -11,6 +11,18 @@ export type InstalledApp = {
   iconDataUrl?: string;
 };
 
+export type AppRuntimeStatus = "starting" | "running" | "stopped";
+
+export type AppRuntimeStat = {
+  appId: string;
+  status: AppRuntimeStatus;
+  cpuUsage: number;
+  memoryUsageMB: number;
+  processIds: number[];
+  recommendedToClose: boolean;
+  recommendationReason?: string;
+};
+
 export type ScanProgress = {
   phase: "cache" | "scan";
   current: number;

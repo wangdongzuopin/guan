@@ -1,7 +1,7 @@
 ﻿import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as Speech from "expo-speech";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import "./global.css";
 import {
   Alert,
@@ -20,18 +20,43 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { AppItem } from "./src/components/AppItem";
 import { ModeSwitcher } from "./src/components/ModeSwitcher";
 import { NewsPanel } from "./src/components/NewsPanel";
-import { initializeInstalledApps, launchApp } from "./src/services/appScanner";
+import {
+  forceStopDesktopApp,
+  getDesktopRuntimeStats,
+  initializeInstalledApps,
+  launchApp
+} from "./src/services/appScanner";
 import { getHotNews } from "./src/services/newsService";
-import { AccessibilityMode, InstalledApp, NewsCategory, NewsItem, ScanProgress } from "./src/types";
+import {
+  AccessibilityMode,
+  AppRuntimeStat,
+  AppRuntimeStatus,
+  InstalledApp,
+  NewsCategory,
+  NewsItem,
+  ScanProgress
+} from "./src/types";
 
 const DEFAULT_CATEGORY: NewsCategory = "national";
 const APP_ORDER_STORAGE_KEY = "app_collection_desktop_order_v1";
 const APP_GROUP_STORAGE_KEY = "app_collection_desktop_group_v1";
 const APP_PINNED_STORAGE_KEY = "app_collection_desktop_pinned_v1";
 const NAV_COLLAPSE_STORAGE_KEY = "app_collection_nav_collapsed_v1";
+const STARTING_TIMEOUT_MS = 12_000;
 
 const GROUP_KEYS = ["office", "development", "system", "other"] as const;
 type GroupKey = (typeof GROUP_KEYS)[number];
+
+function createStoppedRuntime(appId: string): AppRuntimeStat {
+  return {
+    appId,
+    status: "stopped",
+    cpuUsage: 0,
+    memoryUsageMB: 0,
+    processIds: [],
+    recommendedToClose: false
+  };
+}
 
 if (Platform.OS === "web") {
   require("./src/styles/web.css");
@@ -137,6 +162,9 @@ export default function App() {
   });
   const [pendingBlindAppId, setPendingBlindAppId] = useState<string | null>(null);
   const [bootLoading, setBootLoading] = useState(isElectronRuntime);
+  const [runtimeStats, setRuntimeStats] = useState<Record<string, AppRuntimeStat>>({});
+  const [startingAtMap, setStartingAtMap] = useState<Record<string, number>>({});
+  const [stoppingIds, setStoppingIds] = useState<string[]>([]);
 
   const fontScale = useMemo(() => (mode === "elderly" ? 1.35 : 1), [mode]);
   const cardScale = useMemo(() => (mode === "elderly" ? 1.2 : 1), [mode]);
@@ -233,6 +261,136 @@ export default function App() {
     () => apps.find((app) => app.id === selectedAppId) || null,
     [apps, selectedAppId]
   );
+
+  const resolveRuntimeForApp = useCallback(
+    (app: InstalledApp): AppRuntimeStat => {
+      const runtime = runtimeStats[app.id];
+      if (runtime?.status === "running") return runtime;
+      if (startingAtMap[app.id]) {
+        return {
+          ...(runtime || createStoppedRuntime(app.id)),
+          status: "starting"
+        };
+      }
+      return runtime || createStoppedRuntime(app.id);
+    },
+    [runtimeStats, startingAtMap]
+  );
+
+  const runtimeSummary = useMemo(() => {
+    let starting = 0;
+    let running = 0;
+    let stopped = 0;
+    let recommended = 0;
+
+    for (const app of apps) {
+      const runtime = runtimeStats[app.id];
+      const status: AppRuntimeStatus =
+        runtime?.status === "running" ? "running" : startingAtMap[app.id] ? "starting" : "stopped";
+
+      if (status === "running") running += 1;
+      else if (status === "starting") starting += 1;
+      else stopped += 1;
+
+      if (runtime?.recommendedToClose) {
+        recommended += 1;
+      }
+    }
+
+    return { starting, running, stopped, recommended };
+  }, [apps, runtimeStats, startingAtMap]);
+
+  const recommendedApps = useMemo(() => {
+    return apps.filter((app) => runtimeStats[app.id]?.recommendedToClose);
+  }, [apps, runtimeStats]);
+
+  const refreshRuntimeStats = useCallback(
+    async (targetApps?: InstalledApp[]) => {
+      const scopedApps = targetApps || apps;
+      if (!isElectronRuntime || scopedApps.length === 0) {
+        setRuntimeStats({});
+        setStartingAtMap({});
+        setStoppingIds([]);
+        return;
+      }
+
+      try {
+        const stats = await getDesktopRuntimeStats(scopedApps);
+        const nextMap: Record<string, AppRuntimeStat> = {};
+        for (const item of stats) {
+          if (!item?.appId) continue;
+          nextMap[item.appId] = item;
+        }
+        setRuntimeStats(nextMap);
+
+        const validIds = new Set(scopedApps.map((item) => item.id));
+        const now = Date.now();
+        setStartingAtMap((old) => {
+          const next: Record<string, number> = {};
+          for (const [id, startedAt] of Object.entries(old)) {
+            if (!validIds.has(id)) continue;
+            if (nextMap[id]?.status === "running") continue;
+            if (now - startedAt > STARTING_TIMEOUT_MS) continue;
+            next[id] = startedAt;
+          }
+          return next;
+        });
+      } catch {
+        // Ignore runtime refresh errors.
+      }
+    },
+    [apps, isElectronRuntime]
+  );
+
+  const stopApps = useCallback(
+    async (targets: InstalledApp[]) => {
+      if (!isElectronRuntime || targets.length === 0) return;
+
+      const targetIds = targets.map((item) => item.id);
+      setStoppingIds((old) => Array.from(new Set([...old, ...targetIds])));
+
+      let failedCount = 0;
+      for (const app of targets) {
+        try {
+          const processIds = runtimeStats[app.id]?.processIds || [];
+          await forceStopDesktopApp(app, processIds);
+        } catch {
+          failedCount += 1;
+        }
+      }
+
+      setStoppingIds((old) => old.filter((id) => !targetIds.includes(id)));
+      setStartingAtMap((old) => {
+        const next = { ...old };
+        for (const id of targetIds) {
+          delete next[id];
+        }
+        return next;
+      });
+      await refreshRuntimeStats();
+
+      if (failedCount > 0) {
+        Alert.alert("部分应用未停止", `${failedCount} 个应用停止失败，请稍后重试`);
+      }
+    },
+    [isElectronRuntime, refreshRuntimeStats, runtimeStats]
+  );
+
+  useEffect(() => {
+    if (!isElectronRuntime || apps.length === 0) {
+      setRuntimeStats({});
+      setStartingAtMap({});
+      setStoppingIds([]);
+      return;
+    }
+
+    void refreshRuntimeStats(apps);
+    const timer = setInterval(() => {
+      void refreshRuntimeStats(apps);
+    }, 2500);
+
+    return () => clearInterval(timer);
+  }, [apps, isElectronRuntime, refreshRuntimeStats]);
 
   const loadInstalledApps = async (forceRescan = false) => {
     setScanLoading(true);
@@ -341,7 +499,18 @@ export default function App() {
     }
 
     try {
+      if (isElectronRuntime) {
+        setStartingAtMap((old) => ({
+          ...old,
+          [app.id]: Date.now()
+        }));
+      }
       await launchApp(app);
+      if (isElectronRuntime) {
+        setTimeout(() => {
+          void refreshRuntimeStats();
+        }, 500);
+      }
     } catch (error: any) {
       Alert.alert("\u6253\u5f00\u5931\u8d25", error?.message || `\u65e0\u6cd5\u6253\u5f00 ${app.name}`);
     }
@@ -466,7 +635,7 @@ export default function App() {
               </View>
               <View>
                 <Text style={{ fontSize: 30 * fontScale }} className="font-bold text-slate-800 tracking-tight">guan</Text>
-                <Text style={{ fontSize: 15 * fontScale }} className="text-slate-500 font-semibold tracking-wide">Electron Workspace</Text>
+                <Text style={{ fontSize: 15 * fontScale }} className="text-slate-500 font-semibold tracking-wide">Workspace</Text>
               </View>
             </View>
 
@@ -479,7 +648,6 @@ export default function App() {
                   placeholderTextColor="#94a3b8"
                   value={query}
                   onChangeText={setQuery}
-                  style={{ outlineStyle: 'none' }}
                 />
                 {query.length > 0 && (
                   <Pressable onPress={() => setQuery('')}>
@@ -700,20 +868,30 @@ export default function App() {
                       </View>
                       <View className="flex-row flex-wrap gap-4">
                         {pinnedApps.map((app) => (
-                          <AppItem
-                            key={app.id}
-                            app={app}
-                            fontScale={fontScale}
-                            cardScale={cardScale}
-                            itemWidth={itemWidth - 24}
-                            groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                            selected={selectedAppId === app.id}
-                            pinned
-                            dragEnabled={false}
-                            onTogglePinned={togglePinned}
-                            onPress={onAppPress}
-                            onLongPress={(target) => setSelectedAppId(target.id)}
-                          />
+                          (() => {
+                            const runtime = resolveRuntimeForApp(app);
+                            const stopping = stoppingIds.includes(app.id);
+                            return (
+                              <AppItem
+                                key={app.id}
+                                app={app}
+                                fontScale={fontScale}
+                                cardScale={cardScale}
+                                itemWidth={itemWidth - 24}
+                                groupLabel={GROUP_LABEL[resolveGroup(app)]}
+                                selected={selectedAppId === app.id}
+                                pinned
+                                dragEnabled={false}
+                                runtime={runtime}
+                                canForceStop={runtime.status === "running" && !stopping}
+                                stopping={stopping}
+                                onTogglePinned={togglePinned}
+                                onForceStop={(target) => void stopApps([target])}
+                                onPress={onAppPress}
+                                onLongPress={(target) => setSelectedAppId(target.id)}
+                              />
+                            );
+                          })()
                         ))}
                       </View>
                     </View>
@@ -733,28 +911,38 @@ export default function App() {
 
                       <View className="flex-row flex-wrap gap-4">
                         {groupedApps[group].map((app) => (
-                          <AppItem
-                            key={app.id}
-                            app={app}
-                            fontScale={fontScale}
-                            cardScale={cardScale}
-                            itemWidth={itemWidth - 24} // Adjusted for padding
-                            groupLabel={GROUP_LABEL[resolveGroup(app)]}
-                            selected={selectedAppId === app.id}
-                            pinned={pinnedSet.has(app.id)}
-                            dragEnabled={false}
-                            dragHint={
-                              webDragEnabled
-                                ? dragOverId === app.id
-                                  ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
-                                  : "\u62d6\u62fd\u6392\u5e8f"
-                                : "\u6392\u5e8f"
-                            }
-                            onTogglePinned={togglePinned}
-                            webDragProps={undefined}
-                            onPress={onAppPress}
-                            onLongPress={(target) => setSelectedAppId(target.id)}
-                          />
+                          (() => {
+                            const runtime = resolveRuntimeForApp(app);
+                            const stopping = stoppingIds.includes(app.id);
+                            return (
+                              <AppItem
+                                key={app.id}
+                                app={app}
+                                fontScale={fontScale}
+                                cardScale={cardScale}
+                                itemWidth={itemWidth - 24} // Adjusted for padding
+                                groupLabel={GROUP_LABEL[resolveGroup(app)]}
+                                selected={selectedAppId === app.id}
+                                pinned={pinnedSet.has(app.id)}
+                                dragEnabled={false}
+                                dragHint={
+                                  webDragEnabled
+                                    ? dragOverId === app.id
+                                      ? "\u653e\u7f6e\u5230\u8fd9\u91cc"
+                                      : "\u62d6\u62fd\u6392\u5e8f"
+                                    : "\u6392\u5e8f"
+                                }
+                                runtime={runtime}
+                                canForceStop={runtime.status === "running" && !stopping}
+                                stopping={stopping}
+                                onTogglePinned={togglePinned}
+                                onForceStop={(target) => void stopApps([target])}
+                                webDragProps={undefined}
+                                onPress={onAppPress}
+                                onLongPress={(target) => setSelectedAppId(target.id)}
+                              />
+                            );
+                          })()
                         ))}
                       </View>
                     </View>

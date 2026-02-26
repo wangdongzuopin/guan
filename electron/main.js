@@ -2,7 +2,7 @@
 const path = require("path");
 const fs = require("fs");
 const crypto = require("crypto");
-const { spawn } = require("child_process");
+const { spawn, spawnSync } = require("child_process");
 
 const isDev = !app.isPackaged;
 let mainWindow = null;
@@ -25,6 +25,11 @@ function getSplashLogoDataUrl() {
   } catch {
     return null;
   }
+}
+
+function getWindowIconPath() {
+  const logoPath = path.join(__dirname, "..", "logo.jpeg");
+  return fs.existsSync(logoPath) ? logoPath : undefined;
 }
 
 function buildSplashHtml(logoDataUrl) {
@@ -191,6 +196,7 @@ function closeSplashWhenReady(delayMs = 260) {
 
 function createSplashWindow() {
   return new Promise((resolve) => {
+  const windowIcon = getWindowIconPath();
   splashWindow = new BrowserWindow({
     width: 440,
     height: 300,
@@ -204,6 +210,7 @@ function createSplashWindow() {
     skipTaskbar: true,
     show: false,
     transparent: false,
+    icon: windowIcon,
     backgroundColor: "#f8fafc",
     webPreferences: {
       contextIsolation: true,
@@ -229,10 +236,12 @@ function createSplashWindow() {
 }
 
 function createWindow() {
+  const windowIcon = getWindowIconPath();
   const win = new BrowserWindow({
     width: 1280,
     height: 860,
     show: false,
+    icon: windowIcon,
     backgroundColor: "#eef4ff",
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
@@ -372,6 +381,163 @@ function readShortcut(shortcutPath) {
 function expandEnvPath(input) {
   if (!input || typeof input !== "string") return "";
   return input.replace(/%([^%]+)%/g, (_m, key) => process.env[key] || "");
+}
+
+function toNumber(value) {
+  if (typeof value === "number" && Number.isFinite(value)) return value;
+  if (typeof value === "string") {
+    const normalized = value.trim().replace(",", ".");
+    const parsed = Number(normalized);
+    if (Number.isFinite(parsed)) return parsed;
+  }
+  return 0;
+}
+
+function normalizeProcessBaseName(name) {
+  if (!name || typeof name !== "string") return "";
+  return name.toLowerCase().replace(/\.exe$/i, "").replace(/#\d+$/, "").trim();
+}
+
+function resolveProcessBaseName(appInfo) {
+  const byExecutable = appInfo?.executablePath
+    ? normalizeProcessBaseName(path.basename(String(appInfo.executablePath)))
+    : "";
+
+  if (byExecutable) return byExecutable;
+
+  const pkg = String(appInfo?.packageName || "");
+  if (pkg.startsWith("desktop:")) {
+    const byPackage = normalizeProcessBaseName(pkg.slice("desktop:".length));
+    if (byPackage) return byPackage;
+  }
+
+  return "";
+}
+
+function runPowerShellJson(command) {
+  const result = spawnSync(
+    "powershell.exe",
+    ["-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", command],
+    {
+      encoding: "utf8",
+      windowsHide: true,
+      timeout: 12000,
+      maxBuffer: 10 * 1024 * 1024
+    }
+  );
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  if (result.status !== 0) {
+    const errorText = `${result.stderr || ""}`.trim();
+    throw new Error(errorText || "PowerShell command failed");
+  }
+
+  const text = `${result.stdout || ""}`.trim();
+  if (!text) return [];
+
+  const parsed = JSON.parse(text);
+  return Array.isArray(parsed) ? parsed : [parsed];
+}
+
+function readProcessRuntimeRows() {
+  const script = [
+    '$ErrorActionPreference = "Stop"',
+    "Get-CimInstance Win32_PerfFormattedData_PerfProc_Process",
+    '  | Where-Object { $_.IDProcess -gt 0 -and $_.Name -ne "_Total" -and $_.Name -ne "Idle" }',
+    "  | Select-Object IDProcess, Name, PercentProcessorTime, WorkingSetPrivate, WorkingSet",
+    "  | ConvertTo-Json -Depth 3 -Compress"
+  ].join("; ");
+
+  try {
+    return runPowerShellJson(script)
+      .map((row) => {
+        const pid = Math.round(toNumber(row?.IDProcess));
+        const baseName = normalizeProcessBaseName(row?.Name);
+        const cpuUsage = Math.max(0, toNumber(row?.PercentProcessorTime));
+        const memoryBytes = Math.max(0, toNumber(row?.WorkingSetPrivate) || toNumber(row?.WorkingSet));
+        return {
+          pid,
+          baseName,
+          cpuUsage,
+          memoryUsageMB: memoryBytes / (1024 * 1024)
+        };
+      })
+      .filter((row) => row.pid > 0 && !!row.baseName);
+  } catch {
+    return [];
+  }
+}
+
+function buildRuntimeStats(apps) {
+  const runtimeRows = readProcessRuntimeRows();
+  const grouped = new Map();
+
+  for (const row of runtimeRows) {
+    const bucket = grouped.get(row.baseName) || [];
+    bucket.push(row);
+    grouped.set(row.baseName, bucket);
+  }
+
+  return (Array.isArray(apps) ? apps : []).map((appInfo) => {
+    const processBaseName = resolveProcessBaseName(appInfo);
+    const matches = processBaseName ? grouped.get(processBaseName) || [] : [];
+    const cpuUsage = matches.reduce((sum, row) => sum + row.cpuUsage, 0);
+    const memoryUsageMB = matches.reduce((sum, row) => sum + row.memoryUsageMB, 0);
+    const running = matches.length > 0;
+    const recommendedToClose = running && cpuUsage < 1 && memoryUsageMB >= 300;
+
+    return {
+      appId: String(appInfo?.id || ""),
+      status: running ? "running" : "stopped",
+      cpuUsage: Number(cpuUsage.toFixed(1)),
+      memoryUsageMB: Number(memoryUsageMB.toFixed(1)),
+      processIds: matches.map((row) => row.pid),
+      recommendedToClose,
+      recommendationReason: recommendedToClose ? "CPU长期低于1%且内存占用较高" : undefined
+    };
+  });
+}
+
+function runTaskKill(args) {
+  const result = spawnSync("taskkill", args, {
+    encoding: "utf8",
+    windowsHide: true,
+    timeout: 10000
+  });
+
+  if (result.error) {
+    throw result.error;
+  }
+
+  const output = `${result.stdout || ""}\n${result.stderr || ""}`.trim();
+  const notFound = /no running instance|not found|找不到进程|没有运行的实例/i.test(output);
+
+  if (result.status !== 0 && !notFound) {
+    throw new Error(output || "taskkill failed");
+  }
+}
+
+function forceStopApp(payload) {
+  const appInfo = payload?.app || payload || {};
+  const processIds = Array.isArray(payload?.processIds) ? payload.processIds : [];
+  const validPids = [...new Set(processIds.map((pid) => Math.round(toNumber(pid))).filter((pid) => pid > 0))];
+
+  if (validPids.length > 0) {
+    for (const pid of validPids) {
+      runTaskKill(["/PID", String(pid), "/T", "/F"]);
+    }
+    return;
+  }
+
+  const processBaseName = resolveProcessBaseName(appInfo);
+  if (!processBaseName) {
+    throw new Error("未找到可终止的进程标识");
+  }
+
+  runTaskKill(["/IM", `${processBaseName}.exe`, "/T", "/F"]);
 }
 
 function normalizeIconPath(rawIconPath) {
@@ -524,6 +690,15 @@ async function scanDesktopApps(event) {
 
 ipcMain.handle("desktop:scan-apps", (event) => {
   return scanDesktopApps(event);
+});
+
+ipcMain.handle("desktop:runtime-stats", async (_event, apps) => {
+  return buildRuntimeStats(apps);
+});
+
+ipcMain.handle("desktop:force-stop-app", async (_event, payload) => {
+  forceStopApp(payload);
+  return { ok: true };
 });
 
 ipcMain.handle("desktop:splash-progress", async (_event, payload) => {

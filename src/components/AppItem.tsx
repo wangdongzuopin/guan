@@ -1,6 +1,6 @@
 ﻿import { Ionicons } from "@expo/vector-icons";
 import { Pressable, Text, View } from "react-native";
-import { InstalledApp } from "../types";
+import { AppRuntimeStat, InstalledApp } from "../types";
 
 type Props = {
   app: InstalledApp;
@@ -12,8 +12,12 @@ type Props = {
   dragEnabled?: boolean;
   dragHint?: string;
   pinned?: boolean;
+  runtime?: AppRuntimeStat;
+  canForceStop?: boolean;
+  stopping?: boolean;
   webDragProps?: Record<string, any>;
   onTogglePinned?: (app: InstalledApp) => void;
+  onForceStop?: (app: InstalledApp) => void;
   onPress: (app: InstalledApp) => void;
   onLongPress?: (app: InstalledApp) => void;
 };
@@ -28,13 +32,31 @@ export function AppItem({
   dragEnabled,
   dragHint,
   pinned,
+  runtime,
+  canForceStop,
+  stopping,
   webDragProps,
   onTogglePinned,
+  onForceStop,
   onPress,
   onLongPress
 }: Props) {
   const packageHint = app.packageName?.replace(/^desktop:/, "") || app.packageName;
   const hasPinToggle = typeof onTogglePinned === "function";
+  const status = runtime?.status || "stopped";
+  const statusLabel = status === "starting" ? "启动" : status === "running" ? "运行中" : "停止";
+  const statusStyle =
+    status === "starting"
+      ? "bg-amber-100"
+      : status === "running"
+        ? "bg-emerald-100"
+        : "bg-slate-100";
+  const statusTextStyle =
+    status === "starting" ? "text-amber-700" : status === "running" ? "text-emerald-700" : "text-slate-500";
+  const cpuText = status === "stopped" ? "--" : `${(runtime?.cpuUsage || 0).toFixed(1)}%`;
+  const memoryText = status === "stopped" ? "--" : `${(runtime?.memoryUsageMB || 0).toFixed(1)} MB`;
+  const showStopAction = canForceStop && onForceStop && status === "running";
+  const canStart = status === "stopped";
 
   return (
     <View
@@ -115,14 +137,57 @@ export function AppItem({
             {packageHint}
           </Text>
 
-          <View className="mt-4 flex-row items-center justify-between">
-            <View className={`rounded-xl px-2.5 py-1 ${selected ? "bg-white/20" : "bg-slate-100"}`}>
-              <Text style={{ fontSize: 10 * fontScale }} className={`${selected ? "text-white/90" : "text-slate-500"} font-semibold`}>
-                点击打开
+          <View className="mt-3 flex-row items-center">
+            <View className={`rounded-full px-2.5 py-1 ${selected ? "bg-white/20" : statusStyle}`}>
+              <Text style={{ fontSize: 10 * fontScale }} className={`${selected ? "text-white/90" : statusTextStyle} font-semibold`}>
+                {statusLabel}
               </Text>
             </View>
+            {runtime?.recommendedToClose && (
+              <View className={`ml-2 rounded-full px-2.5 py-1 ${selected ? "bg-white/20" : "bg-rose-100"}`}>
+                <Text style={{ fontSize: 10 * fontScale }} className={`${selected ? "text-white/90" : "text-rose-600"} font-semibold`}>
+                  建议关闭
+                </Text>
+              </View>
+            )}
+          </View>
 
-            {dragEnabled ? (
+          <View className="mt-3 flex-row items-center justify-between">
+            <Text style={{ fontSize: 10 * fontScale }} className={`${selected ? "text-white/85" : "text-slate-500"} font-semibold`}>
+              CPU {cpuText} · MEM {memoryText}
+            </Text>
+
+            {showStopAction ? (
+              <Pressable
+                onPress={(e: any) => {
+                  e?.stopPropagation?.();
+                  onForceStop(app);
+                }}
+                className={`rounded-lg px-2.5 py-1 ${selected ? "bg-white/20" : "bg-rose-500"}`}
+              >
+                <Text style={{ fontSize: 10 * fontScale }} className="font-semibold text-white">
+                  {stopping ? "停止中" : "强行停止"}
+                </Text>
+              </Pressable>
+            ) : canStart ? (
+              <Pressable
+                onPress={(e: any) => {
+                  e?.stopPropagation?.();
+                  onPress(app);
+                }}
+                className={`rounded-lg px-2.5 py-1 ${selected ? "bg-white/20" : "bg-brand-500"}`}
+              >
+                <Text style={{ fontSize: 10 * fontScale }} className="font-semibold text-white">
+                  启动
+                </Text>
+              </Pressable>
+            ) : status === "starting" ? (
+              <View className={`rounded-lg px-2.5 py-1 ${selected ? "bg-white/20" : "bg-amber-500"}`}>
+                <Text style={{ fontSize: 10 * fontScale }} className="font-semibold text-white">
+                  启动中
+                </Text>
+              </View>
+            ) : dragEnabled ? (
               <View className="flex-row items-center">
                 <Ionicons name="reorder-three-outline" size={14} color={selected ? "rgba(255,255,255,0.8)" : "#94a3b8"} />
                 <Text

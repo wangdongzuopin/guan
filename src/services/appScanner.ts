@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Linking, Platform } from "react-native";
-import { InstalledApp, ScanProgress } from "../types";
+import { AppRuntimeStat, InstalledApp, ScanProgress } from "../types";
 import desktopApps from "../cache/desktopApps.generated.json";
 
 const CACHE_VERSION = "v6";
@@ -281,4 +281,30 @@ export async function launchApp(app: InstalledApp): Promise<void> {
     return;
   }
   throw new Error("\u672a\u627e\u5230\u53ef\u542f\u52a8\u65b9\u5f0f");
+}
+
+export async function getDesktopRuntimeStats(apps: InstalledApp[]): Promise<AppRuntimeStat[]> {
+  if (Platform.OS === "web" && typeof window !== "undefined" && window.electronAPI?.runtimeStats) {
+    return window.electronAPI.runtimeStats(apps);
+  }
+
+  return apps.map((app) => ({
+    appId: app.id,
+    status: "stopped",
+    cpuUsage: 0,
+    memoryUsageMB: 0,
+    processIds: [],
+    recommendedToClose: false
+  }));
+}
+
+export async function forceStopDesktopApp(app: InstalledApp, processIds: number[] = []): Promise<void> {
+  if (!(Platform.OS === "web" && typeof window !== "undefined" && window.electronAPI?.forceStopApp)) {
+    throw new Error("当前环境不支持强行停止");
+  }
+
+  await window.electronAPI.forceStopApp({
+    app,
+    processIds
+  });
 }

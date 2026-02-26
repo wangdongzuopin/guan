@@ -1,4 +1,4 @@
-import { InstalledApp } from "./index";
+import { AppRuntimeStat, InstalledApp } from "./index";
 
 type DesktopScanProgress = {
   current: number;
@@ -25,6 +25,8 @@ declare global {
     electronAPI?: {
       scanApps: () => Promise<InstalledApp[]>;
       launchApp: (appInfo: InstalledApp) => Promise<{ ok: boolean }>;
+      runtimeStats: (apps: InstalledApp[]) => Promise<AppRuntimeStat[]>;
+      forceStopApp: (payload: { app: InstalledApp; processIds?: number[] }) => Promise<{ ok: boolean }>;
       openNewsDetail: (news: NewsDetailPayload) => Promise<{ ok: boolean }>;
       setSplashProgress: (payload: SplashProgressPayload) => Promise<{ ok: boolean }>;
       onScanProgress: (callback: (payload: DesktopScanProgress) => void) => () => void;

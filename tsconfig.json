@@ -4,7 +4,8 @@
     "strict": true,
     "resolveJsonModule": true,
     "types": [
-      "nativewind/types"
+      "nativewind/types",
+      "node"
     ]
   },
   "include": [
